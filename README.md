@@ -18,7 +18,7 @@ A map application to help users find the nearest overdose prevention centre.
 4. Run `npm start`
 5. Assuming you have logged in to Expo on your Expo mobile app, go to the "projects" tab. You should see your app serving from your computer
 
-## Trouble shoot
+## Troubleshoot
 1. Expo app says the app is taking longer than expected to load
     1. Open up computer terminal and run: `ipconfig` for Windows. `ifconfig` for Mac
     2. Check to see if your IP is the same as the one Expo used (Expo shows the IP after you ran `npm start`)
