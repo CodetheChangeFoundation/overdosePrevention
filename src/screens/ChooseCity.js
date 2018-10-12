@@ -7,7 +7,7 @@ export default class ChooseCityScreen extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text>Choose City Screen</Text>
                 <Button
                     title="Choose City Screen"
