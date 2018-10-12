@@ -1,21 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import SplashScreen from "./src/screens/Splash";
+import {createStackNavigator} from "react-navigation";
+import ChooseCityScreen from "./src/screens/ChooseCity";
+import MapScreen from "./src/screens/Map";
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
-  }
-}
+const routeConfigs = {};
+routeConfigs[SplashScreen.ScreenName] = {screen: SplashScreen};
+routeConfigs[ChooseCityScreen.ScreenName] = {screen: ChooseCityScreen};
+routeConfigs[MapScreen.ScreenName] = {screen: MapScreen};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const stackNavigatorConfig = {
+    headerMode: "none"
+};
+
+export default createStackNavigator(routeConfigs, stackNavigatorConfig);
