@@ -1,6 +1,6 @@
 import {Button, Text, View} from "react-native";
 import React from "react";
-import SplashScreen from "./Splash";
+import ChooseCityScreen from "./ChooseCity";
 
 export default class MapScreen extends React.Component {
     static ScreenName = "MapScreen";
@@ -11,7 +11,7 @@ export default class MapScreen extends React.Component {
                 <Text>Map Screen</Text>
                 <Button
                     title="Map Screen"
-                    onPress={() => this.props.navigation.navigate(SplashScreen.ScreenName)}
+                    onPress={() => this.props.navigation.navigate(ChooseCityScreen.ScreenName)}
                 />
             </View>
         );
