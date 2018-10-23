@@ -1,6 +1,7 @@
 import {Button, Text, View} from "react-native";
 import React from "react";
 import MapScreen from "./Map";
+import PropTypes from "prop-types";
 
 export default class ChooseCityScreen extends React.Component {
     static ScreenName = "ChooseCityScreen";
@@ -17,3 +18,7 @@ export default class ChooseCityScreen extends React.Component {
         );
     }
 }
+
+ChooseCityScreen.propTypes = {
+    navigation: PropTypes.object.isRequired
+};

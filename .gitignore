@@ -1,6 +1,6 @@
 # Auto Generated
 node_modules/
-*.expo/*
+*.expo
 npm-debug.*
 
 # IDE
