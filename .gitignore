@@ -2,6 +2,8 @@
 node_modules/
 *.expo
 npm-debug.*
+*.jks
 
 # IDE
 .idea/
+
