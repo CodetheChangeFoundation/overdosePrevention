@@ -7,3 +7,6 @@ npm-debug.*
 # IDE
 .idea/
 
+# App Config
+app.json
+
