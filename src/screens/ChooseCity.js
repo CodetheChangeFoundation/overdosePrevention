@@ -11,7 +11,7 @@ export default class ChooseCityScreen extends React.Component {
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
                 <Text>Choose City Screen</Text>
                 <Button
-                    title="Choose City Screen"
+                    title="Go To Map Screen"
                     onPress={() => this.props.navigation.navigate(MapScreen.ScreenName)}
                 />
             </View>

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "overdosePrevention",
+    "name": "Overdose Prevention",
     "description": "This project is really great.",
     "slug": "overdosePrevention",
     "privacy": "public",
@@ -21,7 +21,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "ca.codethechange.overdoesprevention",
+      "config": {
+        "googleMapsApiKey": "YOUR IOS GOOGLE MAP API KEY HERE"
+      }
+    },
+    "android": {
+      "package": "ca.codethechange.overdoesprevention",
+      "config": {
+        "googleMaps": { "apiKey": "YOUR ANDROID GOOGLE MAP API KEY HERE" }
+      }
     }
   }
 }
