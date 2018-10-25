@@ -14,11 +14,11 @@ A map application to help users find the nearest overdose prevention centre.
 ## Serving App on device
 1. Clone repo
 2. Run `npm install`
-3. Install `pre-commit`\
+3. Install `pre-commit`
 
    Mac Users -->\
    Install homebrew and run `brew install pre-commit`\
-   Run `pre-commit install`\
+   Run `pre-commit install`
 
    Windows Users -->\
    Install the latest Python (3.7) executable file from <https://www.python.org/downloads/>\
