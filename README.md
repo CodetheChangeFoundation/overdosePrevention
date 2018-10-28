@@ -11,7 +11,7 @@ A map application to help users find the nearest overdose prevention centre.
 ## Tech Stack
 - React-Native - Render interface.
 
-## Serving App on device
+## Serving App on device (Only works under private network)
 1. Clone repo
 2. Run `npm install`
 3. Install `pre-commit`
