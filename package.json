@@ -11,12 +11,10 @@
     "clear-haste-cache": "rm -rf /tmp/haste-map-react-native-packager-*"
   },
   "dependencies": {
-    "bootstrap": "^4.1.3",
     "expo": "^30.0.1",
     "native-base": "^2.8.1",
     "prop-types": "^15.6.2",
     "react": "^16.3.1",
-    "react-dom": "^16.6.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
     "react-navigation": "^2.18.0"
