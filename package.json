@@ -11,12 +11,19 @@
     "clear-haste-cache": "rm -rf /tmp/haste-map-react-native-packager-*"
   },
   "dependencies": {
-    "expo": "^30.0.1",
+    "@expo/vector-icons": "^9.0.0",
+    "expo": "^30.0.2",
+    "expo-font": "^3.0.1",
+    "ionicons": "^4.5.5",
     "native-base": "^2.8.1",
     "prop-types": "^15.6.2",
     "react": "^16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
     "react-navigation": "^2.18.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-plugin-react": "^7.12.4"
   }
 }

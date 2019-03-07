@@ -4,6 +4,8 @@ node_modules/
 npm-debug.*
 *.jks
 
+get-pip.py
+
 # IDE
 .idea/
 
