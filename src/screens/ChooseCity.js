@@ -6,21 +6,70 @@ import MapScreen from "./Map";
 import PropTypes from "prop-types";
 import OpsLogo from "../components/OpsLogo";
 
-export default class ChooseCityScreen extends React.Component {
-    static ScreenName = "ChooseCityScreen";
+const cityData = [
+    {
+        name: "Vancouver",
+        color: "blue",
+        coordinates: {
+            latitude: 49.2827,
+            longitude: -123.1207,
+        }
+    },
+    {
+        name: "Surrey",
+        color: "purple",
+        coordinates: {
+            latitude: 49.1913,
+            longitude: -122.8490,
+        }
+    },
+    {
+        name: "Burnaby",
+        color: "red",
+        coordinates: {
+            latitude: 49.2488,
+            longitude: -122.9805,
+        }
+    },
+    {
+        name: "Richmond",
+        color: "green",
+        coordinates: {
+            latitude: 49.1666,
+            longitude: -123.1336,
+        }
+    }
+];
 
+export default class ChooseCityScreen extends React.Component {
     constructor(props) {
         super(props);
-        let cityData = [
-            {name: "Vancouver", color: "blue"},
-            {name: "Surrey", color: "purple"},
-            {name: "Burnaby", color: "red"},
-            {name: "Richmond", color: "green"}
-        ];
-        this.state = {isAnonymous: true, cityData: cityData}
+        this.state = {isAnonymous: true}
     }
 
-    renderCityButton(name, color) {
+    renderCities() {
+        let allCitiesRendered = [];
+        for (let i = 0; i < cityData.length; i += 2) {
+            allCitiesRendered.push(this.renderCityRow(i));
+        }
+        return allCitiesRendered;
+    }
+
+    renderCityRow(index) {
+        let firstCity = cityData[index];
+        let secondCity;
+        if (index + 1 != cityData.length) {
+            secondCity = cityData[index + 1];
+        }
+        return (
+            <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
+                {this.renderCityButton(firstCity.name, firstCity.color, firstCity.coordinates)}
+                {this.renderCityButton(secondCity.name, secondCity.color, secondCity.coordinates)}
+            </View>
+        );
+    }
+
+    renderCityButton(name, color, coordinates) {
         return (
             <Button
                 key={name}
@@ -28,30 +77,8 @@ export default class ChooseCityScreen extends React.Component {
                 containerViewStyle={{width: "40%"}}
                 backgroundColor={color}
                 rounded={true}
-                onPress={() => this.props.navigation.navigate(MapScreen.ScreenName)}
+                onPress={() => this.props.navigation.navigate('MapScreen', {coordinates: coordinates})}
             />
-        );
-    }
-
-    renderCities() {
-        let allCitiesRendered = [];
-        for (let i = 0; i < this.state.cityData.length; i += 2) {
-            allCitiesRendered.push(this.renderCityRow(i));
-        }
-        return allCitiesRendered;
-    }
-
-    renderCityRow(index) {
-        let firstCity = this.state.cityData[index];
-        let secondCity;
-        if (index + 1 != this.state.cityData.length) {
-            secondCity = this.state.cityData[index + 1];
-        }
-        return (
-            <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
-                {this.renderCityButton(firstCity.name, firstCity.color)}
-                {this.renderCityButton(secondCity.name, secondCity.color)}
-            </View>
         );
     }
 
@@ -64,7 +91,8 @@ export default class ChooseCityScreen extends React.Component {
                     <View styles={{padding:15}}>
                         <Item picker>
                             <Picker
-                                iosIcon={<Icon name="ios-arrow-down-outline"/>}
+                             //  iosIcon is causing dependency issues
+                             // iosIcon={<Icon name="ios-arrow-down-outline"/>}
                                 placeholder="Stay anonymous?"
                                 placeholderStyle={{color: "#474a59"}}
                                 placeholderIconColor="#007aff"

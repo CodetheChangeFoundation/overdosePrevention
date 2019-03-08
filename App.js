@@ -4,8 +4,8 @@ import ChooseCityScreen from "./src/screens/ChooseCity";
 import MapScreen from "./src/screens/Map";
 
 const routeConfigs = {};
-routeConfigs[ChooseCityScreen.ScreenName] = {screen: ChooseCityScreen};
-routeConfigs[MapScreen.ScreenName] = {screen: MapScreen};
+routeConfigs['ChooseCityScreen'] = {screen: ChooseCityScreen};
+routeConfigs['MapScreen'] = {screen: MapScreen};
 
 const stackNavigatorConfig = {
     headerMode: "none"
