@@ -5,7 +5,7 @@ import ResponsiveButton from '../components/ResponsiveButton';
 import React from "react";
 import MapScreen from "./Map";
 import PropTypes from "prop-types";
-import OpsLogo from "../components/OpsLogo";
+import OpsLogo from "../components/logos/OpsLogo";
 
 const cityData = [
     {
