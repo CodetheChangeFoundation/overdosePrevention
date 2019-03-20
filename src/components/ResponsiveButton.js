@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, ImageBackground } from "react-native";
 import { LinearGradient } from 'expo';
 import PropTypes from "prop-types";
 
-
+/* Responsive Button is a wrapper around a TouchableOpacity button with a linear gradient */
 class ResponsiveButton extends React.Component {
     render() {
         const end = this.props.horizontalGradient ? [1,0] : [0,1];

@@ -4,6 +4,9 @@ import SearchContainer from './SearchContainer';
 import PropTypes from "prop-types";
 import { StyleSheet } from "react-native";
 
+/*
+* SwipeUpSearch is the component for the swipe up search bar at the bottom of the map screen
+*/
 class SwipeUpSearch extends React.Component {
     constructor(props) {
         super(props);

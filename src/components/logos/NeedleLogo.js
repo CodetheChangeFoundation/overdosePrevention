@@ -5,7 +5,7 @@ import {View} from "react-native";
 
 const { Path } = Svg;
 
-class NurseLogo extends React.Component {
+class NeedleLogo extends React.Component {
     render() {
         const width = this.props.width ? this.props.width : 90;
         const height = this.props.height ? this.props.height: 90;
@@ -58,5 +58,4 @@ NeedleLogo.propTypes = {
     height: PropTypes.number
 }
 
-export default NurseLogo;
-
+export default NeedleLogo;

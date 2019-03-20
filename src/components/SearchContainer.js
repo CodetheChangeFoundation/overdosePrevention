@@ -9,6 +9,7 @@ import ReplacementLogo from './logos/ReplacementLogo';
 import MobileUnitLogo from "./logos/MobileUnitLogo";
 import PipeLogo from "./logos/PipeLogo";
 
+// Sample format of what would need to be passed onto this component
 const sampleData = [
     {
         name: "Service One",
@@ -63,6 +64,7 @@ const sampleData = [
 const windowWidth =  Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+// A map of each service type and the corresponding logo and style to use
 const logosToUse = {
     "Replacement": {
         viewStyle: {backgroundColor: '#E53737'},
@@ -90,12 +92,20 @@ const logosToUse = {
     },
 };
 
+/*
+* SearchContainer is the actual data with the search bar and all the different services
+* for the bottom search container in the map screen
+*/
 class SearchContainer extends React.Component {
     constructor(props) {
         super(props);
         this.renderService = this.renderService.bind(this);
     }
 
+    /*
+    * Renders an individual service
+    * @param {Object} service - a service that contains type of service, name, and its coordinates
+    */
     renderService(service) {
         const containerWidth = sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27;
         return (
@@ -125,8 +135,13 @@ class SearchContainer extends React.Component {
             />
         );
 
+        // isExpanded refers to whether or not the containing upwards sliding component is expanded
         if (!this.props.isExpanded) {
-            return <View>{searchBar}</View>;
+            return (
+                <View>
+                    {searchBar}
+                </View>
+            );
         }
 
         else {
@@ -147,13 +162,6 @@ class SearchContainer extends React.Component {
 const styles = StyleSheet.create({
     SwipeUpSearch: {
         backgroundColor: '#ccd2dd'
-    },
-    cityButton: {
-        padding: 20,
-        width: windowWidth * 0.4,
-        borderRadius: 15,
-        marginLeft: windowWidth * 0.02,
-        marginRight: windowWidth * 0.02,
     }
 });
 
