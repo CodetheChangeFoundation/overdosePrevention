@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Svg} from "expo";
 import {View} from "react-native";
 
-const { Path, Circle } = Svg;
+const { Path } = Svg;
 
 class DetoxLogo extends React.Component {
     render() {
@@ -24,6 +25,11 @@ class DetoxLogo extends React.Component {
             </View>
         )
     }
+}
+
+DetoxLogo.propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number
 }
 
 export default DetoxLogo;

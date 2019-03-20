@@ -1,5 +1,6 @@
 import React from "react";
 import {Svg} from "expo";
+import PropTypes from "prop-types";
 import {View} from "react-native";
 
 const { Path, ClipPath } = Svg;
@@ -22,6 +23,11 @@ class PipeLogo extends React.Component {
             </View>
         )
     }
+}
+
+PipeLogo.propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number
 }
 
 export default PipeLogo;

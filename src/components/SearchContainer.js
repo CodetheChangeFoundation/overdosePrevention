@@ -1,5 +1,6 @@
 import React from "react";
 import {SearchBar} from 'react-native-elements';
+import PropTypes from "prop-types";
 import { View, StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
 import DetoxLogo from './logos/DetoxLogo';
 import NurseLogo from './logos/NurseLogo';
@@ -155,5 +156,10 @@ const styles = StyleSheet.create({
         marginRight: windowWidth * 0.02,
     }
 });
+
+SearchContainer.propTypes = {
+    onLogoPress: PropTypes.func.isRequired,
+    isExpanded: PropTypes.bool.isRequired
+}
 
 export default SearchContainer;

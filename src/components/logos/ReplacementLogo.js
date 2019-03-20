@@ -1,5 +1,6 @@
 import React from "react";
 import {Svg} from "expo";
+import PropTypes from "prop-types";
 import {View} from "react-native";
 
 const { Path } = Svg;
@@ -22,6 +23,11 @@ class ReplacementLogo extends React.Component {
             </View>
         )
     }
+}
+
+ReplacementLogo.propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number
 }
 
 export default ReplacementLogo;

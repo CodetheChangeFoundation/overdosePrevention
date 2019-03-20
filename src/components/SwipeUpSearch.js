@@ -1,9 +1,8 @@
 import React from "react";
 import SwipeUpDown from 'react-native-swipe-up-down';
 import SearchContainer from './SearchContainer';
-import {SearchBar} from 'react-native-elements';
-import { View, StyleSheet, Text, Dimensions } from "react-native";
-import OpsLogo from "./OpsLogo";
+import PropTypes from "prop-types";
+import { StyleSheet } from "react-native";
 
 class SwipeUpSearch extends React.Component {
     constructor(props) {
@@ -16,7 +15,7 @@ class SwipeUpSearch extends React.Component {
 
     /*
     * Collapses the swipe up down view when a service button is clicked
-    * @param {Object}, coordinates, latitude and longitude of the service
+    * @param {Object} coordinates - latitude and longitude of the service
     */
     onServiceButtonClick(coordinates) {
         this.swipeUpDownRef.showMini();
@@ -63,5 +62,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccd2dd'
     }
 });
+
+SwipeUpSearch.propTypes = {
+    onLogoPress: PropTypes.func.isRequired
+}
 
 export default SwipeUpSearch;

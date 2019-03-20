@@ -1,5 +1,6 @@
 import React from "react";
 import {Svg} from "expo";
+import PropTypes from "prop-types";
 import {View} from "react-native";
 
 const { Path, Circle } = Svg;
@@ -19,6 +20,11 @@ class OpsLogo extends React.Component {
             </View>
         )
     }
+}
+
+OpsLogo.propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number
 }
 
 export default OpsLogo;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {Svg} from "expo";
 import {View} from "react-native";
 
@@ -50,6 +51,11 @@ class NurseLogo extends React.Component {
             </View>
         )
     }
+}
+
+NeedleLogo.propTypes = {
+    width: PropTypes.number,
+    height: PropTypes.number
 }
 
 export default NurseLogo;
