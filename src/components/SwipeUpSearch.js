@@ -1,0 +1,67 @@
+import React from "react";
+import SwipeUpDown from 'react-native-swipe-up-down';
+import SearchContainer from './SearchContainer';
+import {SearchBar} from 'react-native-elements';
+import { View, StyleSheet, Text, Dimensions } from "react-native";
+import OpsLogo from "./OpsLogo";
+
+class SwipeUpSearch extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isExpanded: false
+        }
+        this.onServiceButtonClick = this.onServiceButtonClick.bind(this);
+    }
+
+    /*
+    * Collapses the swipe up down view when a service button is clicked
+    * @param {Object}, coordinates, latitude and longitude of the service
+    */
+    onServiceButtonClick(coordinates) {
+        this.swipeUpDownRef.showMini();
+        this.props.onLogoPress(coordinates);
+    }
+
+    render() {
+        const flexStyle = this.state.isExpanded ?
+            {flex: 1, justifyContent: 'flex-start'}
+            :
+            {flex: 1, justifyContent: 'center', alignItems: 'center'};
+
+        return (
+            <SwipeUpDown
+                hasRef={ref => (this.swipeUpDownRef = ref)}
+                itemMini = {
+                    <SearchContainer
+                        isExpanded = {false}
+                        onLogoPress = {this.onServiceButtonClick}
+                    />
+                }
+                animation = 'spring'
+                itemFull = {
+                    <SearchContainer
+                        isExpanded = {true}
+                        onLogoPress = {this.onServiceButtonClick}
+                    />
+                }
+                onShowMini = {() =>
+                    this.setState({isExpanded: false}
+                )}
+                onShowFull  = {() =>
+                    this.setState({isExpanded: true}
+                )}
+                style = {[styles.SwipeUpSearch, flexStyle]}
+                swipeHeight={60}
+            />
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    SwipeUpSearch: {
+        backgroundColor: '#ccd2dd'
+    }
+});
+
+export default SwipeUpSearch;
