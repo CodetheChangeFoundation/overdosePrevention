@@ -41,6 +41,31 @@ const cityData = [
     }
 ];
 
+const serviceData = [
+	{
+		name: "Insite Supervised Injection Site",
+		address: "139 E Hastings St, Vancouver, BC",
+		phoneNumber: "(604) 694-7779",
+		hours: "Monday to Sunday - 9:00AM to 3:00AM",
+		city: "Vancouver",
+		coordinates: {
+            latitude: 49.281603,
+            longitude: -123.101245,
+        }
+	},
+	{
+		name: "The University of British Columbia",
+		address: "2329 West Mall, Vancouver, BC",
+		phoneNumber: "(604) 822-2211",
+		hours: "Open til the earth dies",
+		city: "Vancouver",
+		coordinates: {
+            latitude: 49.261084,
+            longitude: -123.245829,
+        }
+	}
+];
+
 export default class ChooseCityScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -56,20 +81,33 @@ export default class ChooseCityScreen extends React.Component {
     }
 
     renderCityRow(index) {
-        let firstCity = cityData[index];
-        let secondCity;
+		let firstCity = cityData[index];
+		let firstCityServices = []; // array of services from service data
+		for (let i = 0, n = serviceData.length; i < n; i++) {
+			if (serviceData[i].city === firstCity.name) {
+				firstCityServices.push(serviceData[i]);
+			}
+		}
+
+		let secondCity;
+		let secondCityServices = []; // array of services from service data
         if (index + 1 != cityData.length) {
-            secondCity = cityData[index + 1];
+			secondCity = cityData[index + 1];
+			for (let i = 0, n = serviceData.length; i < n; i++) {
+				if (serviceData[i].city === secondCity.name) {
+					secondCityServices.push(serviceData[i]);
+				}
+			}
         }
         return (
             <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
-                {this.renderCityButton(firstCity.name, firstCity.color, firstCity.coordinates)}
-                {this.renderCityButton(secondCity.name, secondCity.color, secondCity.coordinates)}
+                {this.renderCityButton(firstCity.name, firstCity.color, firstCity.coordinates, firstCityServices)}
+                {this.renderCityButton(secondCity.name, secondCity.color, secondCity.coordinates, secondCityServices)}
             </View>
         );
     }
 
-    renderCityButton(name, color, coordinates) {
+    renderCityButton(name, color, cityCoordinates, cityServices) {
         return (
             <Button
                 key={name}
@@ -77,7 +115,8 @@ export default class ChooseCityScreen extends React.Component {
                 containerViewStyle={{width: "40%"}}
                 backgroundColor={color}
                 rounded={true}
-                onPress={() => this.props.navigation.navigate('MapScreen', {coordinates: coordinates})}
+				onPress={() => this.props.navigation.navigate('MapScreen', {coordinates: cityCoordinates, services: cityServices
+				})}
             />
         );
     }
