@@ -24,3 +24,7 @@ VALUES
   (4, 'Richmond'),
   (5, 'New Westminster'),
   (6, 'Port Coquitlam');
+
+SELECT * FROM Site;
+
+SELECT * FROM City;
