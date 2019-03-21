@@ -1,5 +1,4 @@
-import { Button, Text, View, Modal, TouchableHighlight } from "react-native";
-// import SlidingUpPanel from 'rn-sliding-up-panel';
+import { Button, Text, View, Modal, TouchableHighlight, Image } from "react-native";
 import React from "react";
 import ChooseCityScreen from "./ChooseCity";
 import PropTypes from "prop-types";
@@ -23,7 +22,6 @@ export default class MapScreen extends React.Component {
 			isPopupActive: true,
 			currentService: service
 		});
-
 	}
 
 	render() {
@@ -45,10 +43,10 @@ export default class MapScreen extends React.Component {
 					visible={this.state.isPopupActive}>
 					<View style={{ marginTop: 22 }}>
 						<View>
-							<Text>Hello World!</Text>
+							<Text>Test Modal</Text>
 							<TouchableHighlight
 								onPress={() => {
-									this.setState({isPopupActive: !this.state.isPopupActive});
+									this.setState({ isPopupActive: false });
 								}}>
 								<Text>Hide Modal</Text>
 							</TouchableHighlight>
@@ -70,16 +68,19 @@ export default class MapScreen extends React.Component {
 								description={service.hours}
 								onPress={() => this.serviceClick(service)}
 							>
+							 	<Image
+									source={require('../../assets/marker.png')}
+								/>							
 								<MapView.Callout>
 									<View>
 										<Text>{service.name}{"\n"}{service.hours}</Text>
 									</View>
 								</MapView.Callout>
+
 							</MapView.Marker>
 						)
 					})}
-				</MapView>
-				{/* <SlidingUpPanel/> */}
+				</MapView>			
 
 				<Button
 					title="Go Back To Choose City Screen"
