@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Climate Hub API",
+    "description": "Overdose Prevention Society API",
     "version": "1.0.0",
-    "title": "Climate Hub API",
+    "title": "OPS API",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "pritpal@codethechange.ca"
@@ -13,7 +13,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "https://CodetheChangeFoundation.github.io/climatehub-api/",
+  "host": "overdose-prevention-inst.c3hn6roqwxvf.ca-central-1.rds.amazonaws.com",
   "basePath": "/",
   "tags": [
     {
