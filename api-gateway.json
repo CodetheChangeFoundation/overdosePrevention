@@ -116,7 +116,7 @@
         },
         "TAGS":{
           "type": "string"
-        },
+        }
       }
     },
     "Site": {
