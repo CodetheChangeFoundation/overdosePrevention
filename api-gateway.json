@@ -55,7 +55,7 @@
         "tags": [
           "city"
         ],
-        "summary": "Get specified group",
+        "summary": "Get specified city",
         "operationId": "city-get-gid",
         "parameters": [
           {
@@ -67,7 +67,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Specified group",
+            "description": "Specified city",
             "schema": {
               "$ref": "#/definitions/City"
             }
@@ -88,7 +88,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "sid",
+            "name": "cid",
             "required": true,
             "type": "integer"
           }
