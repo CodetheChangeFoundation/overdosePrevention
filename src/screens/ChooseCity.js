@@ -57,7 +57,7 @@ const serviceData = [
 		name: "The University of British Columbia",
 		address: "2329 West Mall, Vancouver, BC",
 		phoneNumber: "(604) 822-2211",
-		hours: "Open til the earth dies",
+		hours: "Monday to Sunday - 8:00AM to 6:00PM",
 		city: "Vancouver",
 		coordinates: {
             latitude: 49.261084,

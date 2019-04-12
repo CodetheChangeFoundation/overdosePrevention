@@ -3,7 +3,7 @@ import React from "react";
 import ChooseCityScreen from "./ChooseCity";
 import PropTypes from "prop-types";
 import { MapView, Marker } from "expo";
-import OpsPopup from "../components/OpsPopup";
+import MapPopup from "../components/MapPopup";
 
 const deltas = { latitudeDelta: 0.0922, longitudeDelta: 0.0421 };
 export default class MapScreen extends React.Component {
@@ -18,7 +18,6 @@ export default class MapScreen extends React.Component {
 	}
 
 	serviceClick(service, popupState) {
-		console.log("service marker was clicked");
 		this.setState({
 			isPopupActive: popupState,
 			currentService: service
@@ -43,15 +42,17 @@ export default class MapScreen extends React.Component {
 				<Modal
 					visible={this.state.isPopupActive}
 					transparent={true}>
-					<View style={{backgroundColor: 'rgba(0,0,0,0.1)'}}>						
-						<View>
-							<OpsPopup/>
-							<TouchableHighlight
-								onPress={() => {
-									this.serviceClick(null, false);
-								}}>
-								<Text>Hide Modal</Text>
-							</TouchableHighlight>
+					<View style={{flex: 1,backgroundColor: 'rgba(0,0,0,0.3)'}}>
+						<View style={{margin: "10% 10% 10% 10%", backgroundColor: 'rgba(255,255,255, 0.9)'}}>
+							<MapPopup service={this.state.currentService}></MapPopup>
+							<View style={{alignItems: "center"}}>
+								<TouchableHighlight
+									onPress={() => {
+										this.serviceClick(null, false);
+									}}>
+									<Text>Hide Modal</Text>
+								</TouchableHighlight>
+							</View>
 						</View>
 					</View>
 				</Modal>
@@ -73,11 +74,11 @@ export default class MapScreen extends React.Component {
 							 	<Image
 									source={require('../../assets/marker.png')}
 								/>							
-								<MapView.Callout>
+								{/* <MapView.Callout>
 									<View>
 										<Text>{service.name}{"\n"}{service.hours}</Text>
 									</View>
-								</MapView.Callout>
+								</MapView.Callout> */}
 
 							</MapView.Marker>
 						)
