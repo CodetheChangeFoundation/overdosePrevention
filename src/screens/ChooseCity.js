@@ -117,8 +117,8 @@ export default class ChooseCityScreen extends React.Component {
     // The second picker is not a picker, Its a hack to keep styling consistent
     render() {
         return (
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    <View style={{padding:25}}>
+            <View style={styles.containerStyle}>
+                    <View style={styles.opsLogoStyle}>
                         <OpsLogo/>
                     </View>
                     <View>
@@ -127,7 +127,7 @@ export default class ChooseCityScreen extends React.Component {
                              //  iosIcon is causing dependency issues
                              // iosIcon={<Icon name="ios-arrow-down-outline"/>}
                                 placeholder="Stay anonymous?"
-                                placeholderStyle={{color: "#474a59", fontWeight: '300', width: '80%'}}
+                                placeholderStyle={styles.pickerStyle}
                                 placeholderIconColor="#007aff"
                                 selectedValue={this.state.isAnonymous}
                                 onValueChange={(itemValue) => this.setState({isAnonymous: itemValue})}
@@ -140,7 +140,7 @@ export default class ChooseCityScreen extends React.Component {
                             <Picker
                                 placeholder="Select City"
                                 enabled = {false}
-                                placeholderStyle={{color: "#474a59", fontWeight: '300', width: '80%'}}
+                                placeholderStyle={styles.pickerStyle}
                             />
                         </Item>
                     </View>
@@ -153,7 +153,7 @@ export default class ChooseCityScreen extends React.Component {
                         gradientColors = {['#F3CB14', '#E58B37']}
                         label = "Continue"
                     />
-                    <Text style = {{marginTop: '10%', fontWeight: '200'}}>
+                    <Text style = {styles.disclaimer}>
                         No information will be tracked or saved.
                     </Text>
             </View>
@@ -176,6 +176,23 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         marginLeft: windowWidth * 0.02,
         marginRight: windowWidth * 0.02,
+    },
+    pickerStyle: {
+        color: "#474a59", 
+        fontWeight: '300', 
+        width: '80%'
+    },
+    disclaimer: {
+        marginTop: '10%', 
+        fontWeight: '200'
+    },
+    opsLogoStyle: {
+        padding:25
+    },
+    containerStyle: {
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'center'
     }
 })
 

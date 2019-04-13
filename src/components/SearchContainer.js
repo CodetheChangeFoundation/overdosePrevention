@@ -107,12 +107,11 @@ class SearchContainer extends React.Component {
     * @param {Object} service - a service that contains type of service, name, and its coordinates
     */
     renderService(service) {
-        const containerWidth = sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27;
         return (
-            <View style = {{width: containerWidth, alignItems: "center", margin: windowWidth * 0.02}}>
+            <View key = {service.name} style = {styles.serviceContainer}>
                 <TouchableOpacity
                     onPress = {() => this.props.onLogoPress(service.coordinates)}
-                    style = {[{borderRadius: 40, padding: 10}, logosToUse[service.type].viewStyle]}>
+                    style = {[styles.serviceLogo, logosToUse[service.type].viewStyle]}>
                     {logosToUse[service.type].logo}
                 </TouchableOpacity>
                 <Text>
@@ -162,6 +161,15 @@ class SearchContainer extends React.Component {
 const styles = StyleSheet.create({
     SwipeUpSearch: {
         backgroundColor: '#ccd2dd'
+    },
+    serviceContainer: {
+        width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27, 
+        alignItems: "center", 
+        margin: windowWidth * 0.02
+    },
+    serviceLogo: {
+        borderRadius: 40, 
+        padding: 10
     }
 });
 

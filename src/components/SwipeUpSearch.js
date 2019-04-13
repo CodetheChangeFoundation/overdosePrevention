@@ -26,11 +26,7 @@ class SwipeUpSearch extends React.Component {
     }
 
     render() {
-        const flexStyle = this.state.isExpanded ?
-            {flex: 1, justifyContent: 'flex-start'}
-            :
-            {flex: 1, justifyContent: 'center', alignItems: 'center'};
-
+        const flexStyle = this.state.isExpanded ? styles.expandedStyle : styles.nonExpandedStyle;
         return (
             <SwipeUpDown
                 hasRef={ref => (this.swipeUpDownRef = ref)}
@@ -63,6 +59,15 @@ class SwipeUpSearch extends React.Component {
 const styles = StyleSheet.create({
     SwipeUpSearch: {
         backgroundColor: '#ccd2dd'
+    },
+    expandedStyle: {
+        flex: 1, 
+        justifyContent: 'flex-start'
+    },
+    nonExpandedStyle: {
+        flex: 1, 
+        justifyContent: 'center', 
+        alignItems: 'center'
     }
 });
 

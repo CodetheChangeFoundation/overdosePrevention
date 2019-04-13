@@ -28,7 +28,6 @@ ResponsiveButton.propTypes = {
     gradientColors: PropTypes.array.isRequired,
     horizontalGradient: PropTypes.bool,
     labelStyle: PropTypes.object,
-    style: PropTypes.object,
     label: PropTypes.string.isRequired,
 };
 
