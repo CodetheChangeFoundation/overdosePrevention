@@ -61,12 +61,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccd2dd'
     },
     expandedStyle: {
-        flex: 1, 
+        flex: 1,
         justifyContent: 'flex-start'
     },
     nonExpandedStyle: {
-        flex: 1, 
-        justifyContent: 'center', 
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center'
     }
 });

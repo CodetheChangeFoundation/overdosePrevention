@@ -129,7 +129,7 @@ class SearchContainer extends React.Component {
                 containerStyle = {styles.SwipeUpSearch}
                 platform = 'default'
                 inputContainerStyle = {styles.SwipeUpSearch}
-                inputStyle = {{backgroundColor: '#babfc6', borderRadius: 7}}
+                inputStyle = {styles.searchBarInput}
                 lightTheme = {true}
             />
         );
@@ -141,15 +141,14 @@ class SearchContainer extends React.Component {
                     {searchBar}
                 </View>
             );
-        }
-
+        } 
+        
         else {
             const services = sampleData.map(this.renderService);
             return (
                 <View>
                     {searchBar}
-                    <View
-                        style = {{flexDirection: 'row', justifyContent: 'flex-start', flexWrap: 'wrap'}}>
+                    <View style = {styles.servicesBox}>
                         {services}
                     </View>
                 </View>
@@ -162,14 +161,23 @@ const styles = StyleSheet.create({
     SwipeUpSearch: {
         backgroundColor: '#ccd2dd'
     },
+    servicesBox: {
+        flexDirection: 'row', 
+        justifyContent: 'flex-start', 
+        flexWrap: 'wrap'
+    },
     serviceContainer: {
-        width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27, 
-        alignItems: "center", 
+        width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27,
+        alignItems: "center",
         margin: windowWidth * 0.02
     },
     serviceLogo: {
-        borderRadius: 40, 
+        borderRadius: 40,
         padding: 10
+    },
+    searchBarInput: {
+        backgroundColor: '#babfc6', 
+        borderRadius: 7
     }
 });
 

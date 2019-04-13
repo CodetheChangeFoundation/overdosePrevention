@@ -178,20 +178,20 @@ const styles = StyleSheet.create({
         marginRight: windowWidth * 0.02,
     },
     pickerStyle: {
-        color: "#474a59", 
-        fontWeight: '300', 
+        color: "#474a59",
+        fontWeight: '300',
         width: '80%'
     },
     disclaimer: {
-        marginTop: '10%', 
+        marginTop: '10%',
         fontWeight: '200'
     },
     opsLogoStyle: {
         padding:25
     },
     containerStyle: {
-        flex: 1, 
-        alignItems: 'center', 
+        flex: 1,
+        alignItems: 'center',
         justifyContent: 'center'
     }
 })
