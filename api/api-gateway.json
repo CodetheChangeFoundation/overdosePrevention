@@ -1,0 +1,119 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Overdose Prevention Society API",
+    "version": "1.0.0",
+    "title": "OPS API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "pritpal@codethechange.ca"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "https://CodetheChangeFoundation.github.io/overdosePrevention/",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "city"
+    },
+    {
+      "name": "site"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/city": {
+      "get": {
+        "tags": [
+          "city"
+        ],
+        "summary": "Get all cities",
+        "operationId": "city-get-all",
+        "responses": {
+          "200": {
+            "description": "All cities",
+            "schema": {
+              "$ref": "#/definitions/City"
+            }
+          }
+        }
+      }
+    },
+    "/site": {
+      "get": {
+        "tags": [
+          "site"
+        ],
+        "summary": "Get all sites",
+        "operationId": "site-get-all",
+        "responses": {
+          "200": {
+            "description": "All sites",
+            "schema": {
+              "$ref": "#/definitions/Site"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "City": {
+      "type": "object",
+      "properties": {
+        "CID": {
+          "type": "integer"
+        },
+        "City":{
+          "type": "string"
+        }
+      }
+    },
+    "Site": {
+      "type": "object",
+      "properties": {
+        "SID": {
+          "type": "integer"
+        },
+        "Name":{
+          "type": "string"
+        },
+        "PhoneNumber": {
+          "type": "string"
+        },
+        "Hours": {
+          "type": "string"
+        },
+        "Street": {
+          "type": "string"
+        },
+        "PostalCode": {
+          "type": "string"
+        },
+        "CID": {
+          "type": "integer"
+        },
+        "Province": {
+          "type": "string"
+        },
+        "Country": {
+          "type": "string"
+        },
+        "Service": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

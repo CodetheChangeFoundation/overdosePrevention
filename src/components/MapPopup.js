@@ -3,9 +3,8 @@ import { View, Text } from "react-native";
 
 class MapPopup extends React.Component {
 	render() {
-			
 		if (this.props.service === null) {
-			return(<View></View>);
+			return (<View></View>);
 		} else {
 			return (
 				<View>
@@ -13,7 +12,6 @@ class MapPopup extends React.Component {
 						<Text>{this.props.service.name}</Text>
 					</View>
 					<View>
-						
 						<Text>Address</Text>
 						<Text>{this.props.service.address}</Text>
 						<Text>Phone Number</Text>
@@ -23,7 +21,7 @@ class MapPopup extends React.Component {
 					</View>					
 				</View>
 			);
-		}		
+		}
 	}
 }
 

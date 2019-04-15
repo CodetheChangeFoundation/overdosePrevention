@@ -1,6 +1,4 @@
 # Overdose Prevention
-
-Every Wednesday.
 A map application to help users find the nearest overdose prevention centre.
 
 ## Pre-req
@@ -9,26 +7,17 @@ A map application to help users find the nearest overdose prevention centre.
 - Install the Expo mobile app on your device
 
 ## Tech Stack
-- React-Native - Render interface.
+- React-Native
+- MySQL (AWS RDS)
+- API (AWS ApiGateway & Lambda Functions)
 
 ## Serving App on device (Only works under private network)
 1. Clone repo
 2. Run `npm install`
-3. Install `pre-commit`
-
-   Mac Users -->\
-   Install homebrew and run `brew install pre-commit`\
-   Run `pre-commit install`
-
-   Windows Users -->\
-   Install the latest Python (3.7) executable file from <https://www.python.org/downloads/>\
-   Install pip `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py`\
-   Run `python get-pip.py`\
-   Run `pip install pre-commit`\
-   Run `pre-commit install`
-4. Login to Expo by running `expo login` and follow the instructions to enter username and password
-5. Run `npm start`
-6. Assuming you have logged in to Expo on your Expo mobile app, go to the "projects" tab. You should see your app serving from your computer
+3. Login to Expo by running `expo login` and follow the instructions to enter username and password
+4. Run `npm start`
+5. Assuming you have logged in to Expo on your Expo mobile app, go to the "projects" tab. You should see your app serving from your computer
+6. Test using `npm test`
 
 ## Troubleshoot
 1. Expo app says the app is taking longer than expected to load
