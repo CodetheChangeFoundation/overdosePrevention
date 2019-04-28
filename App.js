@@ -1,14 +1,23 @@
-import React from 'react';
-import {createStackNavigator} from "react-navigation";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 import ChooseCityScreen from "./src/screens/ChooseCity";
 import MapScreen from "./src/screens/Map";
 
-const routeConfigs = {};
-routeConfigs['ChooseCityScreen'] = {screen: ChooseCityScreen};
-routeConfigs['MapScreen'] = {screen: MapScreen};
+const AppNavigator = createStackNavigator(
+  {
+    Home: ChooseCityScreen,
+    Map: MapScreen
+  },
+  {
+    initialRouteName: "Home",
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#FFF'
+      },
+      headerTitleStyle: {
+        fontWeight: '600'
+      }
+    }
+  }
+);
 
-const stackNavigatorConfig = {
-    headerMode: "none"
-};
-
-export default createStackNavigator(routeConfigs, stackNavigatorConfig);
+export default createAppContainer(AppNavigator);

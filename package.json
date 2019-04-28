@@ -1,33 +1,25 @@
 {
-  "name": "overdoes-prevention",
   "main": "node_modules/expo/AppEntry.js",
-  "private": true,
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject",
-    "clear-metro-cache": "rm -rf /tmp/metro-bundler-cache-*",
-    "clear-haste-cache": "rm -rf /tmp/haste-map-react-native-packager-*"
+    "test": "jest"
   },
   "dependencies": {
-    "@expo/vector-icons": "^9.0.0",
-    "expo": "^30.0.2",
-    "expo-font": "^3.0.1",
-    "ionicons": "^4.5.5",
-    "native-base": "^2.8.1",
-    "prop-types": "^15.6.2",
-    "react": "^16.3.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
-    "react-native-elements": "^0.19.1",
-    "rn-sliding-up-panel": "^2.0.2"
-    "react-native-linear-gradient": "^2.5.3",
-    "react-native-material-dropdown": "^0.11.1",
+    "expo": "^32.0.0",
+    "jest": "^24.7.1",
+    "prop-types": "^15.7.2",
+    "react": "16.5.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-elements": "^1.1.0",
     "react-native-swipe-up-down": "^1.0.7",
-    "react-navigation": "^2.18.0"
+    "react-native-toaster": "^1.2.2",
+    "react-navigation": "^3.8.1"
   },
   "devDependencies": {
-    "eslint": "^5.15.1",
-    "eslint-plugin-react": "^7.12.4"
-  }
+    "babel-preset-expo": "^5.0.0"
+  },
+  "private": true
 }

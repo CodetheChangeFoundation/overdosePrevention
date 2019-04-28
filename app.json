@@ -1,17 +1,19 @@
 {
   "expo": {
-    "name": "Overdose Prevention",
-    "description": "This project is really great.",
-    "slug": "overdosePrevention",
+    "name": "Overdose Prevention Society",
+    "slug": "ops3",
     "privacy": "public",
-    "sdkVersion": "30.0.0",
-    "platforms": ["ios", "android"],
+    "sdkVersion": "32.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -21,17 +23,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "ca.codethechange.overdoesprevention",
-      "config": {
-        "googleMapsApiKey": "YOUR IOS GOOGLE MAP API KEY HERE"
-      }
-    },
-    "android": {
-      "package": "ca.codethechange.overdoesprevention",
-      "config": {
-        "googleMaps": { "apiKey": "YOUR ANDROID GOOGLE MAP API KEY HERE" }
-      }
+      "supportsTablet": true
     }
   }
 }
