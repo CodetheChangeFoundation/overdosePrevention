@@ -6,43 +6,14 @@ import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
 import OpsLogo from "../components/logos/OpsLogo";
 
-// TODO: remove
-const cityData = [
-  {
-    name: "Vancouver",
-    color: ['rgba(55, 208, 229, 0.9)', 'rgba(66, 137, 221, 0.9)'],
-    coordinates: {
-      latitude: 49.2827,
-      longitude: -123.1207,
-    }
-  },
-  {
-    name: "Surrey",
-    color: ['rgba(194, 55, 229, 0.9)', 'rgba(209, 66, 221, 0.9)'],
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Burnaby",
-    color: ['rgba(229, 55, 55, 0.9)', 'rgba(221, 66, 150, 0.9)'],
-    coordinates: {
-      latitude: 49.2488,
-      longitude: -122.9805,
-    }
-  },
-  {
-    name: "Richmond",
-    color: ['rgba(55, 229, 93, 0.9)', 'rgba(66, 221, 175, 0.9)'],
-    coordinates: {
-      latitude: 49.1666,
-      longitude: -123.1336,
-    }
-  }
+const colours = [
+  ['rgba(55, 208, 229, 0.9)', 'rgba(66, 137, 221, 0.9)'],
+  ['rgba(194, 55, 229, 0.9)', 'rgba(209, 66, 221, 0.9)'],
+  ['rgba(229, 55, 55, 0.9)', 'rgba(221, 66, 150, 0.9)'],
+  ['rgba(55, 229, 93, 0.9)', 'rgba(66, 221, 175, 0.9)']
 ];
 
-// TODO: remove
+// TODO: remove when calling sites from API
 const serviceData = [
 	{
 		name: "Insite Supervised Injection Site",
@@ -80,44 +51,64 @@ export default class ChooseCityScreen extends React.Component {
     super(props);
     this.state = {
       isAnonymous: 1,
-      locationDisabled: false
+      locationDisabled: false,
+      cities: []
     }
     this.enableLocationServices = this.enableLocationServices.bind(this);
   }
 
-  // TODO: refactor to use API
+  componentDidMount() {
+    let self = this;
+    const url = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/city";
+    fetch(url, {
+      method: "GET",
+      body: null,
+      headers: {}
+    }).then((response) => {
+      self.setState({
+        cities: JSON.parse(response._bodyInit)
+      });
+    });
+
+    // TODO: call sites from API
+  }
+
   renderCities() {
     let allCitiesRendered = [];
-    for (let i = 0; i < cityData.length; i += 2) {
+    for (let i = 0; i < this.state.cities.length; i += 2) {
       allCitiesRendered.push(this.renderCityRow(i));
     }
+
     return allCitiesRendered;
   }
 
+  // TODO: messy, make it cleaner when calling sites from API
   renderCityRow(index) {
-		let firstCity = cityData[index];
+		let firstCity = this.state.cities[index];
 		let firstCityServices = []; // array of services from service data
-		for (let i = 0, n = serviceData.length; i < n; i++) {
-			if (serviceData[i].city === firstCity.name) {
+		for (let i = 0; i < serviceData.length; i++) {
+			if (serviceData[i].city === firstCity.city) {
 				firstCityServices.push(serviceData[i]);
 			}
 		}
 
 		let secondCity;
 		let secondCityServices = []; // array of services from service data
-    if (index + 1 != cityData.length) {
-      secondCity = cityData[index + 1];
-      for (let i = 0, n = serviceData.length; i < n; i++) {
-        if (serviceData[i].city === secondCity.name) {
+    if (index + 1 != this.state.cities.length) {
+      secondCity = this.state.cities[index + 1];
+      for (let i = 0; i < serviceData.length; i++) {
+        if (serviceData[i].city === secondCity.city) {
           secondCityServices.push(serviceData[i]);
         }
       }
     }
-      
+
+    let i = index > 3 ? 0 : index;
+    
     return (
       <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
-        {this.renderCityButton(firstCity.name, firstCity.color, firstCity.coordinates, firstCityServices)}
-        {this.renderCityButton(secondCity.name, secondCity.color, secondCity.coordinates, secondCityServices)}
+        {this.renderCityButton(firstCity.city, colours[i], {"latitude": firstCity.lat, "longitude": firstCity.lon}, firstCityServices)}
+        {this.renderCityButton(secondCity.city, colours[i+1], {"latitude": secondCity.lat, "longitude": secondCity.lon}, secondCityServices)}
       </View>
     );
   }
