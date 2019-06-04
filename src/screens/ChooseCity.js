@@ -13,32 +13,6 @@ const colours = [
   ['rgba(55, 229, 93, 0.9)', 'rgba(66, 221, 175, 0.9)']
 ];
 
-// TODO: remove when calling sites from API
-const serviceData = [
-	{
-		name: "Insite Supervised Injection Site",
-		address: "139 E Hastings St, Vancouver, BC",
-		phoneNumber: "(604) 694-7779",
-		hours: "Monday to Sunday - 9:00AM to 3:00AM",
-		city: "Vancouver",
-		coordinates: {
-      latitude: 49.281603,
-      longitude: -123.101245,
-    }
-	},
-	{
-		name: "The University of British Columbia",
-		address: "2329 West Mall, Vancouver, BC",
-		phoneNumber: "(604) 822-2211",
-		hours: "Monday to Sunday - 8:00AM to 6:00PM",
-		city: "Vancouver",
-		coordinates: {
-      latitude: 49.261084,
-      longitude: -123.245829,
-    }
-	}
-];
-
 const windowWidth =  Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -52,15 +26,17 @@ export default class ChooseCityScreen extends React.Component {
     this.state = {
       isAnonymous: 1,
       locationDisabled: false,
-      cities: []
+      cities: [],
+      sites: []
     }
     this.enableLocationServices = this.enableLocationServices.bind(this);
   }
 
   componentDidMount() {
     let self = this;
-    const url = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/city";
-    fetch(url, {
+
+    const cityUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/city";
+    fetch(cityUrl, {
       method: "GET",
       body: null,
       headers: {}
@@ -70,9 +46,19 @@ export default class ChooseCityScreen extends React.Component {
       });
     });
 
-    // TODO: call sites from API
+    const siteUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/site";
+    fetch(siteUrl, {
+      method: "GET",
+      body: null,
+      headers: {}
+    }).then((response) => {
+      self.setState({
+        sites: JSON.parse(response._bodyInit)
+      });
+    });
   }
 
+  // TODO: refactor when creating carousel
   renderCities() {
     let allCitiesRendered = [];
     for (let i = 0; i < this.state.cities.length; i += 2) {
@@ -82,35 +68,37 @@ export default class ChooseCityScreen extends React.Component {
     return allCitiesRendered;
   }
 
-  // TODO: messy, make it cleaner when calling sites from API
   renderCityRow(index) {
-		let firstCity = this.state.cities[index];
-		let firstCityServices = []; // array of services from service data
-		for (let i = 0; i < serviceData.length; i++) {
-			if (serviceData[i].city === firstCity.city) {
-				firstCityServices.push(serviceData[i]);
-			}
-		}
+    let firstCity = this.state.cities[index];
+    let firstCityServices = this.addSites(firstCity.cid);
+    let secondCity;
+    let secondCityServices = [];
 
-		let secondCity;
-		let secondCityServices = []; // array of services from service data
-    if (index + 1 != this.state.cities.length) {
+    if (index + 1 !== this.state.cities.length) {
       secondCity = this.state.cities[index + 1];
-      for (let i = 0; i < serviceData.length; i++) {
-        if (serviceData[i].city === secondCity.city) {
-          secondCityServices.push(serviceData[i]);
-        }
-      }
+      secondCityServices = this.addSites(secondCity.cid);
     }
 
     let i = index > 3 ? 0 : index;
     
     return (
       <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
-        {this.renderCityButton(firstCity.city, colours[i], {"latitude": firstCity.lat, "longitude": firstCity.lon}, firstCityServices)}
-        {this.renderCityButton(secondCity.city, colours[i+1], {"latitude": secondCity.lat, "longitude": secondCity.lon}, secondCityServices)}
+        {this.renderCityButton(firstCity.city, colours[i], {"latitude": parseFloat(firstCity.lat), "longitude": parseFloat(firstCity.lon)}, firstCityServices)}
+        {this.renderCityButton(secondCity.city, colours[i+1], {"latitude": parseFloat(secondCity.lat), "longitude": parseFloat(secondCity.lon)}, secondCityServices)}
       </View>
     );
+  }
+
+  addSites(cid) {
+    let sites = this.state.sites;
+    let services = [];
+    for (let i = 0; i < sites.length; i++) {
+      if (sites[i].cid === cid) {
+        services.push(sites[i]);
+      }
+    }
+    
+    return services;
   }
 
   renderCityButton(name, color, coordinates, services) {
