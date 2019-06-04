@@ -52,13 +52,15 @@ export default class MapScreen extends React.Component {
   
   renderServices() {
     let services = this.props.navigation.getParam('services');
-
     if (services) {
       services.map((service) => {
         return (
           <MapView.Marker
             key={service.address}
-            coordinate={service.coordinates}
+            coordinate={{
+              "latitude": parseFloat(service.lat),
+              "longitude": parseFloat(service.lon)
+            }}
             title={service.name}
             description={service.hours}
             onPress={() => this.serviceClick(service, true)}
