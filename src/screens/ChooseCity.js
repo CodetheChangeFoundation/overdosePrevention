@@ -93,8 +93,8 @@ export default class ChooseCityScreen extends React.Component {
     let sites = this.state.sites;
     let services = [];
     for (let i = 0; i < sites.length; i++) {
-			if (sites[i].cid === cid) {
-				services.push(sites[i]);
+      if (sites[i].cid === cid) {
+        services.push(sites[i]);
       }
     }
     
