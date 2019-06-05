@@ -7,8 +7,6 @@ class CityCarousel extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
-
     this.state = {
       items: props.items
     };
@@ -36,10 +34,6 @@ class CityCarousel extends React.Component {
         </View>
       );
     }
-
-    console.log("NEW");
-    console.log(items);
-    console.log(newItems);
 
     this.setState({
       items: newItems

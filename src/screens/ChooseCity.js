@@ -65,8 +65,6 @@ export default class ChooseCityScreen extends React.Component {
       allCitiesRendered.push(this.renderCityRow(i));
     }
 
-    console.log("HELLO");
-    console.log(allCitiesRendered);
     return allCitiesRendered;
   }
 
