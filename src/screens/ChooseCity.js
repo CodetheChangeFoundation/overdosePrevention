@@ -5,6 +5,7 @@ import { Location } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
 import OpsLogo from "../components/logos/OpsLogo";
+import CityCarousel from "../components/CityCarousel";
 
 const colours = [
   ['rgba(55, 208, 229, 0.9)', 'rgba(66, 137, 221, 0.9)'],
@@ -58,7 +59,6 @@ export default class ChooseCityScreen extends React.Component {
     });
   }
 
-  // TODO: refactor when creating carousel
   renderCities() {
     let allCitiesRendered = [];
     for (let i = 0; i < this.state.cities.length; i += 2) {
@@ -90,13 +90,12 @@ export default class ChooseCityScreen extends React.Component {
   }
 
   addSites(cid) {
-    let sites = this.state.sites;
     let services = [];
-    for (let i = 0; i < sites.length; i++) {
-      if (sites[i].cid === cid) {
-        services.push(sites[i]);
+    this.state.sites.forEach(site => {
+      if (site.cid === cid) {
+        services.push(site);
       }
-    }
+    });
     
     return services;
   }
@@ -179,7 +178,7 @@ export default class ChooseCityScreen extends React.Component {
           </Picker>
         </View>
         {this.state.isAnonymous ? <Text style={styles.textStyle}>Select City</Text> : undefined}
-        {this.state.isAnonymous ? <View>{this.renderCities()}</View> : undefined}
+        {this.state.isAnonymous ? <CityCarousel items={this.renderCities()} /> : undefined}
         {!this.state.isAnonymous ?
         <ResponsiveButton
           onPress={this.enableLocationServices}
@@ -228,11 +227,12 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   disclaimer: {
-    marginTop: '10%',
+    marginTop: '5%',
     fontWeight: '200'
   },
   opsLogoStyle: {
-    padding: 0
+    padding: 0,
+    marginTop: "5%"
   },
   containerStyle: {
     flex: 1,
