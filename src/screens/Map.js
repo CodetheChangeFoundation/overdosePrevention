@@ -52,11 +52,13 @@ export default class MapScreen extends React.Component {
   
   renderServices() {
     let services = this.props.navigation.getParam('services');
+
     if (services) {
-      services.map((service) => {
+      return services.map((service) => {
+        console.log(service);
         return (
           <MapView.Marker
-            key={service.address}
+            key={service.sid}
             coordinate={{
               "latitude": parseFloat(service.lat),
               "longitude": parseFloat(service.lon)
@@ -64,29 +66,34 @@ export default class MapScreen extends React.Component {
             title={service.name}
             description={service.hours}
             onPress={() => this.serviceClick(service, true)}
-          >
-            <Image
-              source={require('../../assets/marker.png')}
-            />							
-            {/* <MapView.Callout>
-              <View>
-                <Text>{service.name}{"\n"}{service.hours}</Text>
-              </View>
-            </MapView.Callout> */}
-          </MapView.Marker>
+            image={require('../../assets/marker.png')}
+          />
         );
       });
     }
   }
 
+  setMapMarker(serviceType) {
+    // TODO: takes in a serviceType and returns the correct map marker
+  }
+
+  createSiteDescription(hours, street, province, postalCode, phoneNumber) {
+    // TODO: takes in a service's hours and address and formats it, calls formatContactInfo()
+  }
+
+  formatContactInfo(street, province, postalCode, phoneNumber) {
+    // TODO: takes in a service's address and number and formats it
+  }
+  
+  // TODO: create a modal
 	render() {
 		return (
 			<View style={{ flex: 1, justifyContent: 'center' }}>
-				<Modal
+				{/* <Modal
 					visible={this.state.isPopupActive}
 					transparent={true}
         >
-					<View style={{flex: 1,backgroundColor: 'rgba(0,0,0,0.3)'}}>
+					<View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
 						<View style={{margin: "10% 10% 10% 10%", backgroundColor: 'rgba(255,255,255, 0.9)'}}>
 							<MapPopup service={this.state.currentService}></MapPopup>
 							<View style={{alignItems: "center"}}>
@@ -100,7 +107,7 @@ export default class MapScreen extends React.Component {
 							</View>
 						</View>
 					</View>
-				</Modal>
+				</Modal> */}
 
         <SearchBar
           round={true}
@@ -120,13 +127,13 @@ export default class MapScreen extends React.Component {
 				<MapView
 					style={{ flex: 1 }}
 					provider="google"
-					initialRegion={this.state.region} // initialRegion
+					initialRegion={this.state.region}
 				>
           {this.renderServices()}
 				</MapView>		
 
         <SwipeUpSearch
-            onLogoPress={this.changeRegion}
+          onLogoPress={this.changeRegion}
         />
 			</View>
 		);
