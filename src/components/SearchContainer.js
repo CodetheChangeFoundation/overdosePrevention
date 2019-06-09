@@ -28,7 +28,7 @@ const sampleData = [
   },
   {
     name: "Service Three",
-    type: "Safe Injection",
+    type: "Supervised Injection",
     coordinates: {
       latitude: 49.1913,
       longitude: -122.8490,
@@ -64,27 +64,27 @@ const sampleData = [
 const logosToUse = {
   "Supervised Injection": {
     viewStyle: {backgroundColor: '#C237E5'},
-    logo: <NeedleLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <NeedleLogo/>
   },
-  "Inhalation Services": {
+  "Pipe": {
     viewStyle: {backgroundColor: '#E58B37'},
-    logo: <PipeLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <PipeLogo/>
   },
   "Nurse": {
     viewStyle: {backgroundColor: '#DD4271'},
-    logo: <NurseLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <NurseLogo/>
   },
-  "Replacement Therapy": {
+  "Replacement": {
     viewStyle: {backgroundColor: '#E53737'},
-    logo: <ReplacementLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <ReplacementLogo/>
   },
   "Detox": {
     viewStyle: {backgroundColor: '#4289DD'},
-    logo: <DetoxLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <DetoxLogo/>
   },
   "Mobile Unit": {
     viewStyle: {backgroundColor: '#74DD42'},
-    logo: <MobileUnitLogo width={windowWidth * 0.15} height={windowWidth * 0.15}/>
+    logo: <MobileUnitLogo/>
   }
 };
 
@@ -97,8 +97,22 @@ const windowWidth = Dimensions.get('window').width;
 class SearchContainer extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      isExpanded: props.isExpanded
+    };
+
     this.renderService = this.renderService.bind(this);
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.isExpanded !== this.props.isExpanded) {
+      this.setState({
+        isExpanded: this.props.isExpanded
+      });
+    }
+  }
+
 
   /*
   * Renders an individual service
@@ -122,7 +136,7 @@ class SearchContainer extends React.Component {
 
   render() {
     // isExpanded refers to whether or not the containing upwards sliding component is expanded
-    if (!this.props.isExpanded) {
+    if (!this.state.isExpanded) {
       return (
         <View>
           <Text style={styles.textStyle}>Filter</Text>
@@ -148,7 +162,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   serviceContainer: {
-    width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27,
+    // width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27,
+    width: "25%",
     alignItems: "center",
     margin: windowWidth * 0.02
   },
@@ -161,7 +176,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     width: '100%',
     fontSize: 18,
-    marginTop: 10
+    marginTop: 10,
+    height: 250
   }
 });
 

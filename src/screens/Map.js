@@ -55,7 +55,6 @@ export default class MapScreen extends React.Component {
 
     if (services) {
       return services.map((service) => {
-        console.log(service);
         return (
           <MapView.Marker
             key={service.sid}
@@ -64,25 +63,59 @@ export default class MapScreen extends React.Component {
               "longitude": parseFloat(service.lon)
             }}
             title={service.name}
-            description={service.hours}
+            description={this.createSiteDescription(service.hours, service.street, service.province, service.postal_code, service.phone_number)}
             onPress={() => this.serviceClick(service, true)}
-            image={require('../../assets/marker.png')}
-          />
+            image={this.setMapMarker(service.service)}
+          >
+            <MapView.Callout>
+              <Text>
+                {this.createSiteDescription(service.hours, service.street, service.province, service.postal_code, service.phone_number)}
+              </Text>
+            </MapView.Callout>
+          </MapView.Marker>
         );
       });
     }
   }
 
   setMapMarker(serviceType) {
-    // TODO: takes in a serviceType and returns the correct map marker
+    let marker;
+
+    switch (serviceType) {
+      case "Supervised Injection":
+        marker = require('../../assets/needle_marker.png');
+        break;
+      case "Replacement":
+        marker = require('../../assets/replacement_marker.png');
+        break;
+      case "Pipe":
+        marker = require('../../assets/pipe_marker.png');
+        break;
+      case "Nurse":
+        marker = require('../../assets/nurse_marker.png');
+        break;
+      case "Mobile Unit":
+        marker = require('../../assets/mobile_unit_marker.png');
+        break;
+      case "Detox":
+        marker = require('../../assets/detox_marker.png');
+        break;
+      default:
+        // TODO: need a default marker
+    }
+
+    return marker;
   }
 
   createSiteDescription(hours, street, province, postalCode, phoneNumber) {
     // TODO: takes in a service's hours and address and formats it, calls formatContactInfo()
+    return `${street}, ${postalCode} ${province}\n${phoneNumber}\n${hours}`;
   }
 
   formatContactInfo(street, province, postalCode, phoneNumber) {
     // TODO: takes in a service's address and number and formats it
+    // formats phone number
+    return `${street}, ${postalCode} ${province}\n${phoneNumber}`;
   }
   
   // TODO: create a modal
@@ -109,7 +142,7 @@ export default class MapScreen extends React.Component {
 					</View>
 				</Modal> */}
 
-        <SearchBar
+        {/* <SearchBar
           round={true}
           placeholder="Search for a place or address"
           containerStyle={{backgroundColor: '#CCD2DD', height: 45}}
@@ -122,7 +155,7 @@ export default class MapScreen extends React.Component {
           lightTheme={true}
           searchIcon={null}
           clearIcon={null}
-        />
+        /> */}
 
 				<MapView
 					style={{ flex: 1 }}
