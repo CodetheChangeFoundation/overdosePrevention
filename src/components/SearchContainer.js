@@ -88,7 +88,7 @@ class SearchContainer extends React.Component {
     if (!this.state.isExpanded) {
       return (
         <View>
-          <Text style={styles.textStyle}>Filter</Text>
+          <Text style={styles.filterStyle}>Filter</Text>
         </View>
       );
     } else {
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     padding: 10
   },
-  textStyle: {
-    color: "#FFF",
+  filterStyle: {
+    color: "#000",
     fontWeight: '600',
     width: '100%',
     fontSize: 18,

@@ -58,7 +58,7 @@ class SwipeUpSearch extends React.Component {
 
 const styles = StyleSheet.create({
   swipeUpSearch: {
-    backgroundColor: '#ccd2dd',
+    backgroundColor: '#FFF',
     height: 40,
     alignItems: 'center'
   },
