@@ -8,56 +8,13 @@ import ReplacementLogo from './logos/ReplacementLogo';
 import MobileUnitLogo from "./logos/MobileUnitLogo";
 import PipeLogo from "./logos/PipeLogo";
 
-// Sample format of what would need to be passed onto this component
-const sampleData = [
-  {
-    name: "Service One",
-    type: "Nurse",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Service Two",
-    type: "Detox",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Service Three",
-    type: "Supervised Injection",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Service Four",
-    type: "Replacement",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Service Five",
-    type: "Mobile Unit",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  },
-  {
-    name: "Service Six",
-    type: "Pipe",
-    coordinates: {
-      latitude: 49.1913,
-      longitude: -122.8490,
-    }
-  }
+const serviceTypes = [
+  "Nurse",
+  "Detox",
+  "Supervised Injection",
+  "Replacement",
+  "Mobile Unit",
+  "Pipe"
 ];
 
 // A map of each service type and the corresponding logo and style to use
@@ -90,10 +47,6 @@ const logosToUse = {
 
 const windowWidth = Dimensions.get('window').width;
 
-/*
-* SearchContainer is the actual data with the search bar and all the different services
-* for the bottom search container in the map screen
-*/
 class SearchContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -113,29 +66,25 @@ class SearchContainer extends React.Component {
     }
   }
 
-
-  /*
-  * Renders an individual service
-  * @param {Object} service - a service that contains type of service, name, and its coordinates
-  */
-  renderService(service) {
+  renderService(serviceType) {
+    // TODO: TouchableOpacity takes a lot of clicks before it works
     return (
-      <View key={service.name} style={styles.serviceContainer}>
-        <TouchableOpacity
-          onPress={() => this.props.onLogoPress(service.coordinates)}
-          style={[styles.serviceLogo, logosToUse[service.type].viewStyle]}
-        >
-          {logosToUse[service.type].logo}
-        </TouchableOpacity>
+      <TouchableOpacity
+        key={serviceType}
+        onPress={() => this.props.onServicePress(serviceType)}
+        style={styles.serviceContainer}
+      >
+        <View style={[styles.serviceLogo, logosToUse[serviceType].viewStyle]}>
+          {logosToUse[serviceType].logo}
+        </View>
         <Text>
-          {service.type}
+          {serviceType}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 
   render() {
-    // isExpanded refers to whether or not the containing upwards sliding component is expanded
     if (!this.state.isExpanded) {
       return (
         <View>
@@ -143,12 +92,9 @@ class SearchContainer extends React.Component {
         </View>
       );
     } else {
-      const services = sampleData.map(this.renderService);
       return (
-        <View>
-          <View style={styles.servicesBox}>
-            {services}
-          </View>
+        <View style={styles.servicesBox}>
+          {serviceTypes.map(this.renderService)}
         </View>
       );
     }
@@ -162,7 +108,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   serviceContainer: {
-    // width: sampleData.length >= 4 ? windowWidth * 0.19 : windowWidth * 0.27,
     width: "25%",
     alignItems: "center",
     margin: windowWidth * 0.02
@@ -182,7 +127,7 @@ const styles = StyleSheet.create({
 });
 
 SearchContainer.propTypes = {
-  onLogoPress: PropTypes.func.isRequired,
+  onServicePress: PropTypes.func.isRequired,
   isExpanded: PropTypes.bool.isRequired
 }
 

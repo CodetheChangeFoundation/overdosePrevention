@@ -26,50 +26,43 @@ export default class MapScreen extends React.Component {
     initialRegion = {...initialRegion, ...deltas}
 
 		this.state = {
-			currentService: null,
-			isPopupActive: false,
-			region: initialRegion,
+      region: initialRegion,
+      servicesToDisplay: undefined
     }
-    this.changeRegion = this.changeRegion.bind(this);
+
+    this.filterSites = this.filterSites.bind(this);
 	}
 
-	serviceClick(service, popupState) {
-		this.setState({
-			isPopupActive: popupState,
-			currentService: service
-		});
-  }
-    
-  /*
-  * Sets this state's region to new coordinates
-  * @param {Object}, coordinates is a latitude and longitude of the focused region
-  */
-  changeRegion(coordinates) {
+ filterSites(type) {
     this.setState({
-      region: {...coordinates, ...deltas}
+      servicesToDisplay: type
     });
   }
   
-  renderServices() {
-    let services = this.props.navigation.getParam('services');
+  renderSites() {
+    let sites = this.props.navigation.getParam('services');
 
-    if (services) {
-      return services.map((service) => {
+    if (this.state.servicesToDisplay !== undefined)
+    {
+      sites = sites.filter(site => this.state.servicesToDisplay === site.service);
+    }
+
+    if (sites) {
+      return sites.map(site => {
         return (
           <MapView.Marker
-            key={service.sid}
+            key={site.sid}
             coordinate={{
-              "latitude": parseFloat(service.lat),
-              "longitude": parseFloat(service.lon)
+              "latitude": parseFloat(site.lat),
+              "longitude": parseFloat(site.lon)
             }}
-            title={service.name}
-            description={this.createSiteDescription(service.hours, service.street, service.province, service.postal_code, service.phone_number)}
-            onPress={() => this.serviceClick(service, true)}
-            image={this.setMapMarker(service.service)}
+            title={site.name}
+            onPress={() => this.serviceClick(site, true)}
+            image={this.setMapMarker(site.service)}
           >
             <MapView.Callout>
               <Text>
-                {this.createSiteDescription(service.hours, service.street, service.province, service.postal_code, service.phone_number)}
+                {this.createSiteDescription(site.hours, site.street, site.province, site.postal_code, site.phone_number)}
               </Text>
             </MapView.Callout>
           </MapView.Marker>
@@ -124,26 +117,6 @@ export default class MapScreen extends React.Component {
 	render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        {/* <Modal
-          visible={this.state.isPopupActive}
-          transparent={true}
-          >
-          <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
-            <View style={{margin: "10% 10% 10% 10%", backgroundColor: 'rgba(255,255,255, 0.9)'}}>
-              <MapPopup service={this.state.currentService}></MapPopup>
-              <View style={{alignItems: "center"}}>
-                <TouchableHighlight
-                  onPress={() => {
-                    this.serviceClick(null, false);
-                  }}
-                >
-                  <Text>Hide Modal</Text>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </View>
-        </Modal> */}
-        
         {/* <SearchBar
           round={true}
           placeholder="Search for a place or address"
@@ -164,11 +137,11 @@ export default class MapScreen extends React.Component {
           provider="google"
           initialRegion={this.state.region}
         >
-          {this.renderServices()}
+          {this.renderSites()}
         </MapView>		
         
         <SwipeUpSearch
-          onLogoPress={this.changeRegion}
+          onServicePress={this.filterSites}
         />
       </View>
     );

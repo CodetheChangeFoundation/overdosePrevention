@@ -20,9 +20,9 @@ class SwipeUpSearch extends React.Component {
   * Collapses the swipe up down view when a service button is clicked
   * @param {Object} coordinates - latitude and longitude of the service
   */
-  onServiceButtonClick(coordinates) {
+  onServiceButtonClick(type) {
     this.swipeUpDownRef.showMini();
-    this.props.onLogoPress(coordinates);
+    this.props.onServicePress(type);
   }
 
   render() {
@@ -30,17 +30,17 @@ class SwipeUpSearch extends React.Component {
     return (
       <SwipeUpDown
         hasRef={ref => (this.swipeUpDownRef = ref)}
+        animation="easeInEaseOut"
         itemMini={
           <SearchContainer
             isExpanded={false}
-            onLogoPress={this.onServiceButtonClick}
+            onServicePress={this.onServiceButtonClick}
           />
         }
-        animation="easeInEaseOut"
         itemFull={
           <SearchContainer
             isExpanded={true}
-            onLogoPress={this.onServiceButtonClick}
+            onServicePress={this.onServiceButtonClick}
           />
         }
         onShowMini={() =>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
 });
 
 SwipeUpSearch.propTypes = {
-  onLogoPress: PropTypes.func.isRequired
+  onServicePress: PropTypes.func.isRequired
 }
 
 export default SwipeUpSearch;
