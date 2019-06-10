@@ -24,6 +24,7 @@ class CityCarousel extends React.Component {
 
   combineCities() {
     let items = this.props.items;
+
     let newItems = [];
 
     for (let i = 0; i < items.length; i += 2) {

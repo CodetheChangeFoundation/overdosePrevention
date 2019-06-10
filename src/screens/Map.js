@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import SwipeUpSearch from '../components/SwipeUpSearch';
 import MapPopup from "../components/MapPopup";
 
-const deltas = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
+const deltas = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}; // TODO: ??
 
 export default class MapScreen extends React.Component {
 	static navigationOptions = {
@@ -16,7 +16,7 @@ export default class MapScreen extends React.Component {
 	constructor(props) {
     super(props);
         
-    // initialRegion is San Francisco if no params are passed in
+    // TODO: not needed, shouldn't be San Fran initial region
     let initialRegion = this.props.navigation.getParam('coordinates',
       {
         latitude: 37.78825,
@@ -26,83 +26,98 @@ export default class MapScreen extends React.Component {
     initialRegion = {...initialRegion, ...deltas}
 
 		this.state = {
-			currentService: null,
-			isPopupActive: false,
-			region: initialRegion,
+      region: initialRegion,
+      servicesToDisplay: undefined
     }
-    this.changeRegion = this.changeRegion.bind(this);
+
+    this.filterSites = this.filterSites.bind(this);
 	}
 
-	serviceClick(service, popupState) {
-		this.setState({
-			isPopupActive: popupState,
-			currentService: service
-		});
-  }
-    
-  /*
-  * Sets this state's region to new coordinates
-  * @param {Object}, coordinates is a latitude and longitude of the focused region
-  */
-  changeRegion(coordinates) {
+ filterSites(type) {
     this.setState({
-      region: {...coordinates, ...deltas}
+      servicesToDisplay: type
     });
   }
   
-  renderServices() {
-    let services = this.props.navigation.getParam('services');
-    if (services) {
-      services.map((service) => {
+  renderSites() {
+    let sites = this.props.navigation.getParam('services');
+
+    if (this.state.servicesToDisplay !== undefined)
+    {
+      sites = sites.filter(site => this.state.servicesToDisplay === site.service);
+    }
+
+    if (sites) {
+      return sites.map(site => {
         return (
           <MapView.Marker
-            key={service.address}
+            key={site.sid}
             coordinate={{
-              "latitude": parseFloat(service.lat),
-              "longitude": parseFloat(service.lon)
+              "latitude": parseFloat(site.lat),
+              "longitude": parseFloat(site.lon)
             }}
-            title={service.name}
-            description={service.hours}
-            onPress={() => this.serviceClick(service, true)}
+            title={site.name}
+            onPress={() => this.serviceClick(site, true)}
+            image={this.setMapMarker(site.service)}
           >
-            <Image
-              source={require('../../assets/marker.png')}
-            />							
-            {/* <MapView.Callout>
-              <View>
-                <Text>{service.name}{"\n"}{service.hours}</Text>
-              </View>
-            </MapView.Callout> */}
+            <MapView.Callout>
+              <Text>
+                {this.createSiteDescription(site.hours, site.street, site.province, site.postal_code, site.phone_number)}
+              </Text>
+            </MapView.Callout>
           </MapView.Marker>
         );
       });
     }
   }
 
-	render() {
-		return (
-			<View style={{ flex: 1, justifyContent: 'center' }}>
-				<Modal
-					visible={this.state.isPopupActive}
-					transparent={true}
-        >
-					<View style={{flex: 1,backgroundColor: 'rgba(0,0,0,0.3)'}}>
-						<View style={{margin: "10% 10% 10% 10%", backgroundColor: 'rgba(255,255,255, 0.9)'}}>
-							<MapPopup service={this.state.currentService}></MapPopup>
-							<View style={{alignItems: "center"}}>
-								<TouchableHighlight
-									onPress={() => {
-										this.serviceClick(null, false);
-									}}
-                >
-									<Text>Hide Modal</Text>
-								</TouchableHighlight>
-							</View>
-						</View>
-					</View>
-				</Modal>
+  setMapMarker(serviceType) {
+    let marker;
 
-        <SearchBar
+    switch (serviceType) {
+      case "Supervised Injection":
+        marker = require('../../assets/needle_marker.png');
+        break;
+      case "Replacement":
+        marker = require('../../assets/replacement_marker.png');
+        break;
+      case "Pipe":
+        marker = require('../../assets/pipe_marker.png');
+        break;
+      case "Nurse":
+        marker = require('../../assets/nurse_marker.png');
+        break;
+      case "Mobile Unit":
+        marker = require('../../assets/mobile_unit_marker.png');
+        break;
+      case "Detox":
+        marker = require('../../assets/detox_marker.png');
+        break;
+      default:
+        // TODO: need a default marker
+    }
+
+    return marker;
+  }
+
+    // TODO: create a modal and complete functions below
+  createSiteDescription(hours, street, province, postalCode, phoneNumber) {
+    // TODO: takes in a service's hours and address and formats it
+    return `${street}, ${postalCode} ${province}\n${this.formatPhoneNumber(phoneNumber)}${hours}`;
+  }
+
+  formatPhoneNumber(phoneNumber) {
+    // TODO: takes in a phone number and formats it
+    if (phoneNumber)
+    {
+      return `${phoneNumber}\n`;
+    }
+  }
+  
+	render() {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        {/* <SearchBar
           round={true}
           placeholder="Search for a place or address"
           containerStyle={{backgroundColor: '#CCD2DD', height: 45}}
@@ -115,22 +130,22 @@ export default class MapScreen extends React.Component {
           lightTheme={true}
           searchIcon={null}
           clearIcon={null}
-        />
-
-				<MapView
-					style={{ flex: 1 }}
-					provider="google"
-					initialRegion={this.state.region} // initialRegion
-				>
-          {this.renderServices()}
-				</MapView>		
-
+        /> */}
+        
+        <MapView
+          style={{ flex: 1 }}
+          provider="google"
+          initialRegion={this.state.region}
+        >
+          {this.renderSites()}
+        </MapView>		
+        
         <SwipeUpSearch
-            onLogoPress={this.changeRegion}
+          onServicePress={this.filterSites}
         />
-			</View>
-		);
-	}
+      </View>
+    );
+  }
 }
 
 MapScreen.propTypes = {

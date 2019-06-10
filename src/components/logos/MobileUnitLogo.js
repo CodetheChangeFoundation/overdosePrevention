@@ -7,8 +7,8 @@ const { Path } = Svg;
 
 class MobileUnitLogo extends React.Component {
 	render() {
-		const width = this.props.width ? this.props.width : 90;
-		const height = this.props.height ? this.props.height: 90;
+		const width = this.props.width ? this.props.width : 50;
+		const height = this.props.height ? this.props.height: 50;
 
 		return (
 			<View>
