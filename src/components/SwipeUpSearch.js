@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
-import SwipeUpDown from '../components/react-native-swipe-up-down/index';
+import SwipeUpDown from './react-native-swipe-up-down/index';
 import SearchContainer from './SearchContainer';
 
 /*
