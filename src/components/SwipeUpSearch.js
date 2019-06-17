@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
-import SwipeUpDown from 'react-native-swipe-up-down';
+import SwipeUpDown from '../components/react-native-swipe-up-down/index';
 import SearchContainer from './SearchContainer';
 
 /*
@@ -10,9 +10,6 @@ import SearchContainer from './SearchContainer';
 class SwipeUpSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isExpanded: false
-    }
     this.onServiceButtonClick = this.onServiceButtonClick.bind(this);
   }
 
@@ -26,31 +23,18 @@ class SwipeUpSearch extends React.Component {
   }
 
   render() {
-    const flexStyle = this.state.isExpanded ? styles.expanded : styles.collapsed;
     return (
       <SwipeUpDown
-        hasRef={ref => (this.swipeUpDownRef = ref)}
         animation="easeInEaseOut"
+        disablePressToShow={false}
+        hasRef={ref => (this.swipeUpDownRef = ref)}
         itemMini={
-          <SearchContainer
-            isExpanded={false}
-            onServicePress={this.onServiceButtonClick}
-          />
+          <SearchContainer onServicePress={this.onServiceButtonClick} />
         }
         itemFull={
-          <SearchContainer
-            isExpanded={true}
-            onServicePress={this.onServiceButtonClick}
-          />
+          <SearchContainer onServicePress={this.onServiceButtonClick} />
         }
-        onShowMini={() =>
-          this.setState({isExpanded: false}
-        )}
-        onShowFull={() =>
-          this.setState({isExpanded: true}
-        )}
-        style={[styles.swipeUpSearch, flexStyle]}
-        swipeHeight={60}
+        style={styles.swipeUpSearch}
       />
     );
   }
@@ -58,18 +42,7 @@ class SwipeUpSearch extends React.Component {
 
 const styles = StyleSheet.create({
   swipeUpSearch: {
-    backgroundColor: '#FFF',
-    height: 40,
-    alignItems: 'center'
-  },
-  expanded: {
-    flex: 1,
-    justifyContent: 'flex-start'
-  },
-  collapsed: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    backgroundColor: '#FFF'
   }
 });
 
