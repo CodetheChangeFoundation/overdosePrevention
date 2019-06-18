@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   disclaimer: {
-    marginBottom: 35,
+    marginBottom: 15,
     fontWeight: '200',
     textAlign: 'center'
   }
