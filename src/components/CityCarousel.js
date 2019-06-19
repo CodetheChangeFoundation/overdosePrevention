@@ -30,7 +30,7 @@ class CityCarousel extends React.Component {
     for (let i = 0; i < cities.length; i++) {
       let cityButton = this.renderCityButton(cities[i].city, colours[i%4], { "latitude": parseFloat(cities[i].lat), "longitude": parseFloat(cities[i].lon) }, this.addSites(cities[i].cid))
       cityButtons.push(cityButton);
-      if ((i+1)%4 == 0 || (i+1) === cities.length) {
+      if ((i+1)%4 === 0 || (i+1) === cities.length) {
         allCitiesRendered.push(<View key={i} style={styles.cityButtonsContainer}>{cityButtons}</View>);
         cityButtons = [];
       }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text, Dimensions, Picker } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, Picker } from "react-native";
 import { Location } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
@@ -145,7 +145,7 @@ export default class ChooseCityScreen extends React.Component {
         return (
           <View style={styles.containerStyle}>
             {this.renderLogoAndPicker()}
-            <View>
+            <View style={styles.carouselContainer}>
               <Text style={styles.textStyle}>Select City</Text>
               <CityCarousel cities={cities} sites={sites} navigation={this.props.navigation}/>
             </View>
@@ -156,7 +156,17 @@ export default class ChooseCityScreen extends React.Component {
         return (
           <View style={styles.containerStyle}>
             {this.renderLogoAndPicker()}
-            <Text>Error</Text>
+            <View style={styles.carouselContainer}>
+              <Text>An error occurred while retrieving the data. Please try again.</Text>
+              <ResponsiveButton
+                onPress={() => {this.setState({fetchStatus: 'Loading'}); this.componentDidMount()}}
+                horizontalGradient={true}
+                labelStyle={{ fontWeight: "600" }}
+                style={styles.tryAgainButton}
+                gradientColors={["#F3CB14", "#E58B37"]}
+                label="Try Again"
+              />
+            </View>
             {this.renderDisclaimer()}
           </View>
         );
@@ -164,6 +174,10 @@ export default class ChooseCityScreen extends React.Component {
         return (
           <View style={styles.containerStyle}>
             {this.renderLogoAndPicker()}
+            <View style={styles.carouselContainer}>
+              <Image style={{width: 60, height: 60}} source={require('../../assets/loading_spinner.gif')} />
+              <Text>Loading</Text>
+            </View>
             {this.renderDisclaimer()}
           </View>
         );
@@ -204,6 +218,20 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.8,
     borderRadius: 30,
     marginTop: windowHeight * 0.05,
+  },
+  tryAgainButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 30,
+    marginTop: windowHeight * 0.05,
+  },
+  carouselContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textStyle: {
     color: "#474a59",
