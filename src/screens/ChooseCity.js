@@ -157,7 +157,7 @@ export default class ChooseCityScreen extends React.Component {
           <View style={styles.containerStyle}>
             {this.renderLogoAndPicker()}
             <View style={styles.carouselContainer}>
-              <Text>An error occurred while retrieving the data. Please try again.</Text>
+              <Text style={styles.disclaimer}>An error occurred while retrieving the data. Please try again.</Text>
               <ResponsiveButton
                 onPress={() => {this.setState({fetchStatus: 'Loading'}); this.componentDidMount()}}
                 horizontalGradient={true}
@@ -176,7 +176,7 @@ export default class ChooseCityScreen extends React.Component {
             {this.renderLogoAndPicker()}
             <View style={styles.carouselContainer}>
               <Image style={{width: 60, height: 60}} source={require('../../assets/loading_spinner.gif')} />
-              <Text>Loading</Text>
+              <Text style={styles.disclaimer}>Loading</Text>
             </View>
             {this.renderDisclaimer()}
           </View>
@@ -225,7 +225,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 50,
     borderRadius: 30,
-    marginTop: windowHeight * 0.05,
   },
   carouselContainer: {
     flex: 1,
