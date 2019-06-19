@@ -1,12 +1,15 @@
 import React from "react";
-import { Text, View, Modal, TouchableHighlight, Image } from "react-native";
+import { Dimensions, Text, View, StyleSheet, Button, Modal, TouchableHighlight, Image } from "react-native";
 import { MapView } from "expo";
 import { SearchBar } from 'react-native-elements';
 import PropTypes from "prop-types";
 import SwipeUpSearch from '../components/SwipeUpSearch';
 import MapPopup from "../components/MapPopup";
+import MapViewDirections from 'react-native-maps-directions';
 
-const deltas = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}; // TODO: ??
+const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
+const deltas = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
 
 export default class MapScreen extends React.Component {
 	static navigationOptions = {
@@ -15,22 +18,18 @@ export default class MapScreen extends React.Component {
 
 	constructor(props) {
     super(props);
-        
-    // TODO: not needed, shouldn't be San Fran initial region
-    let initialRegion = this.props.navigation.getParam('coordinates',
-      {
-        latitude: 37.78825,
-        longitude: -122.4324,
-      }
-    );
-    initialRegion = {...initialRegion, ...deltas}
+    const initialOrigin = this.props.navigation.getParam('coordinates');
+    let destination  = undefined;
+    let origin = undefined;
 
 		this.state = {
-      region: initialRegion,
+      isAnonymous: this.props.navigation.getParam('isAnonymous'),
+      region: {...initialOrigin, ...deltas},
       servicesToDisplay: undefined
     }
 
     this.filterSites = this.filterSites.bind(this);
+    this.setDestination = this.setDestination.bind(this);
 	}
 
  filterSites(type) {
@@ -40,11 +39,13 @@ export default class MapScreen extends React.Component {
   }
   
   renderSites() {
+    const { servicesToDisplay } = this.state;
     let sites = this.props.navigation.getParam('services');
 
-    if (this.state.servicesToDisplay !== undefined)
-    {
-      sites = sites.filter(site => this.state.servicesToDisplay === site.service);
+    if (this.destination !== undefined) {
+      sites = sites.filter(site => this.destination.latitude === parseFloat(site.lat) && this.destination.longitude === parseFloat(site.lon));
+    } else if (servicesToDisplay !== undefined) {
+      sites = sites.filter(site => servicesToDisplay === site.service);
     }
 
     if (sites) {
@@ -57,13 +58,15 @@ export default class MapScreen extends React.Component {
               "longitude": parseFloat(site.lon)
             }}
             title={site.name}
-            onPress={() => this.serviceClick(site, true)}
+            // onPress={() => this.serviceClick(site, true)}
             image={this.setMapMarker(site.service)}
+            ref={ref => { this.marker = ref; }}
           >
-            <MapView.Callout>
+            <MapView.Callout onPress={() => this.setDestination(site.lat, site.lon)}>
               <Text>
                 {this.createSiteDescription(site.hours, site.street, site.province, site.postal_code, site.phone_number)}
               </Text>
+              <Text style={styles.clickableText}>Directions</Text>
             </MapView.Callout>
           </MapView.Marker>
         );
@@ -114,7 +117,41 @@ export default class MapScreen extends React.Component {
     }
   }
   
+  setDestination(lat, lon) {
+    const destLat = parseFloat(lat);
+    const destLon = parseFloat(lon);
+    this.destination = { latitude: destLat, longitude: destLon }
+    
+    if (this.origin !== undefined) {
+      const latitudeDelta = destLat > this.origin.latitude ? destLat - this.origin.latitude : this.origin.latitude - destLat;
+      const longitudeDelta = destLon > this.origin.longitude ? destLon - this.origin.longitude : this.origin.longitude - destLon;
+      this.marker.hideCallout();
+      this.setState({
+        region: {
+          latitude: (destLat + this.origin.latitude) / 2,
+          longitude: (destLon + this.origin.longitude) / 2,
+          latitudeDelta: latitudeDelta + ((200 * latitudeDelta) / windowHeight),
+          longitudeDelta: longitudeDelta + ((200 * longitudeDelta) / windowWidth)
+        }
+      });
+    }
+  }
+
+  // renderCurrentLocation() {
+  //   return (
+  //     <MapView.Marker
+  //       anchor={{x: 0.5, y: 0.5}}
+  //       coordinate={{
+  //         "latitude": parseFloat(this.state.origin.latitude),
+  //         "longitude": parseFloat(this.state.origin.longitude)
+  //       }}
+  //       image={require('../../assets/current_location_marker.png')}
+  //     />
+  //   );
+  // }
+
 	render() {
+    const { isAnonymous, region } = this.state;
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
         {/* <SearchBar
@@ -135,11 +172,35 @@ export default class MapScreen extends React.Component {
         <MapView
           style={{ flex: 1 }}
           provider="google"
-          initialRegion={this.state.region}
+          region={region}
+          showsUserLocation={!isAnonymous ? true : false}
+          followsUserLocation={!isAnonymous ? true : false}
+          onUserLocationChange={!isAnonymous ? (params) => this.origin = { latitude: params.nativeEvent.coordinate.latitude, longitude: params.nativeEvent.coordinate.longitude } : undefined}
         >
           {this.renderSites()}
-        </MapView>		
+          {/* {this.renderCurrentLocation()} */}
+          {this.destination !== undefined && this.origin !== undefined ? 
+          <MapViewDirections 
+            origin={this.origin} 
+            destination={this.destination} 
+            strokeWidth={3}
+            strokeColor="#4289DD"
+            apikey={GOOGLE_MAPS_APIKEY} 
+            onStart={(params) => {
+              // console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+              // console.log(params.waypoints);
+            }} 
+            onReady={result => {
+              // console.log(`Distance: ${result.distance} km`);
+              // console.log(`Duration: ${result.duration} min.`);
+              // console.log(result.coordinates);
+              // console.log(result.fare);
+            }} />
+          : undefined}
+        </MapView>
         
+        
+
         <SwipeUpSearch
           onServicePress={this.filterSites}
         />
@@ -147,6 +208,14 @@ export default class MapScreen extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  clickableText: {
+    color: '#4289DD',
+    textDecorationLine: 'underline',
+    paddingTop: 5
+  }
+});
 
 MapScreen.propTypes = {
 	navigation: PropTypes.object.isRequired

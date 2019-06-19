@@ -112,7 +112,7 @@ export default class ChooseCityScreen extends React.Component {
         gradientColors={color}
         horizontalGradient={false}
         rounded={true}
-        onPress={() => this.props.navigation.navigate('Map', {coordinates: coordinates, services: services})}
+        onPress={() => this.props.navigation.navigate('Map', {isAnonymous: 1, coordinates: coordinates, services: services})}
       />
     );
   }
@@ -124,7 +124,9 @@ export default class ChooseCityScreen extends React.Component {
     if (locationEnabled) {
       navigator.geolocation.watchPosition((position) => {
         self.props.navigation.navigate('Map', {
-          coordinates: position.coords
+          isAnonymous: 0,
+          coordinates: position.coords,
+          services: this.state.sites
         });
       },
       (error) => {
