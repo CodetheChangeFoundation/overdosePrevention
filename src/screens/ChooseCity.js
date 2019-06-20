@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { View, StyleSheet, Text, Dimensions, Picker } from "react-native";
-import { Location } from 'expo';
+import { Location, Permissions } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
 import OpsLogo from "../components/logos/OpsLogo";
@@ -118,30 +118,22 @@ export default class ChooseCityScreen extends React.Component {
   }
 
   enableLocationServices = async () => {
-    let self = this;
-    Location.requestPermissionsAsync();
-    let locationEnabled = await Location.hasServicesEnabledAsync();
-    if (locationEnabled) {
-      navigator.geolocation.watchPosition((position) => {
-        self.props.navigation.navigate('Map', {
-          isAnonymous: 0,
-          coordinates: position.coords,
-          services: this.state.sites
-        });
-      },
-      (error) => {
-        console.log(error);
-        this.setLocationFlag();
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        isAnonymous: 1,
+        locationDisabled: true
       });
-    } else {
-      this.setLocationFlag();
     }
-  }
 
-  setLocationFlag() {
-    this.setState({
-      isAnonymous: 1,
-      locationDisabled: true
+    let location = await Location.getCurrentPositionAsync({});
+    this.props.navigation.navigate('Map', {
+      isAnonymous: 0,
+      coordinates: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      },
+      services: this.state.sites
     });
   }
 
