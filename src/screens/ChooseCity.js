@@ -1,18 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text, Dimensions, Picker } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, Picker } from "react-native";
 import { Location } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
 import OpsLogo from "../components/logos/OpsLogo";
 import CityCarousel from "../components/CityCarousel";
-
-const colours = [
-  ['rgba(55, 208, 229, 0.9)', 'rgba(66, 137, 221, 0.9)'],
-  ['rgba(194, 55, 229, 0.9)', 'rgba(209, 66, 221, 0.9)'],
-  ['rgba(229, 55, 55, 0.9)', 'rgba(221, 66, 150, 0.9)'],
-  ['rgba(55, 229, 93, 0.9)', 'rgba(66, 221, 175, 0.9)']
-];
 
 const windowWidth =  Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,6 +20,7 @@ export default class ChooseCityScreen extends React.Component {
     this.state = {
       isAnonymous: 1,
       locationDisabled: false,
+      fetchStatus: "Loading",
       cities: [],
       sites: []
     }
@@ -35,86 +29,34 @@ export default class ChooseCityScreen extends React.Component {
 
   componentDidMount() {
     let self = this;
-
     const cityUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/city";
-    fetch(cityUrl, {
-      method: "GET",
-      body: null,
-      headers: {}
-    }).then((response) => {
-      self.setState({
-        cities: JSON.parse(response._bodyInit)
-      });
-    });
-
     const siteUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/site";
-    fetch(siteUrl, {
-      method: "GET",
-      body: null,
-      headers: {}
-    }).then((response) => {
-      self.setState({
-        sites: JSON.parse(response._bodyInit)
+    
+    fetch(cityUrl)
+      .then(response => {
+        self.setState({
+          cities: JSON.parse(response._bodyInit)
+        });
+      })
+      .then(() => {
+        fetch(siteUrl)
+          .then(response => {
+            self.setState({
+              sites: JSON.parse(response._bodyInit),
+              fetchStatus: "Success"
+            });
+          })
+          .catch(function(error) {
+            self.setState({
+              fetchStatus: "Failure"
+            });
+          });
+      })
+      .catch(function(error) {
+        self.setState({
+          fetchStatus: "Failure"
+        });
       });
-    });
-  }
-
-  renderCities() {
-    let allCitiesRendered = [];
-    for (let i = 0; i < this.state.cities.length; i += 2) {
-      allCitiesRendered.push(this.renderCityRow(i));
-    }
-
-    return allCitiesRendered;
-  }
-
-  renderCityRow(index) {
-    let firstCity = this.state.cities[index];
-    let firstCityServices = this.addSites(firstCity.cid);
-    let secondCity;
-    let secondCityServices = [];
-
-    if (index + 1 !== this.state.cities.length) {
-      secondCity = this.state.cities[index + 1];
-      secondCityServices = this.addSites(secondCity.cid);
-    }
-
-    let i = index > 3 ? 0 : index;
-    
-    return (
-      <View key={index} style={{flexDirection: "row", justifyContent: "space-between", padding: 10}}>
-        {this.renderCityButton(firstCity.city, colours[i], {"latitude": parseFloat(firstCity.lat), "longitude": parseFloat(firstCity.lon)}, firstCityServices)}
-        {this.renderCityButton(secondCity.city, colours[i+1], {"latitude": parseFloat(secondCity.lat), "longitude": parseFloat(secondCity.lon)}, secondCityServices)}
-      </View>
-    );
-  }
-
-  addSites(cid) {
-    let services = [];
-    this.state.sites.forEach(site => {
-      if (site.cid === cid) {
-        services.push(site);
-      }
-    });
-    
-    return services;
-  }
-
-  renderCityButton(name, color, coordinates, services) {
-    return (
-      <ResponsiveButton
-        key={name}
-        label={name}
-        containerViewStyle={{width: "40%"}}
-        labelStyle={{fontWeight: '600'}}
-        style={styles.cityButton}
-        backgroundColor={color}
-        gradientColors={color}
-        horizontalGradient={false}
-        rounded={true}
-        onPress={() => this.props.navigation.navigate('Map', {coordinates: coordinates, services: services})}
-      />
-    );
   }
 
   enableLocationServices = async () => {
@@ -143,11 +85,11 @@ export default class ChooseCityScreen extends React.Component {
     });
   }
 
-  render() {
-    let locationError = "Location services disabled, please choose a city."
-    return (
-      <View style={styles.containerStyle}>
-        {this.state.locationDisabled ? 
+  renderToaster() {
+    const { locationDisabled } = this.state;
+    const locationError = "Location services disabled, please choose a city.";
+    if (locationDisabled) {
+      return (
         <Toaster 
           message={{
             text: locationError,
@@ -163,81 +105,145 @@ export default class ChooseCityScreen extends React.Component {
                 fontWeight: '600'
             }}
           }}
-        /> : undefined}
+        />
+      )
+    } else {
+      return null;
+    }
+  }
+
+  renderLogoAndPicker() {
+    const { isAnonymous, locationDisabled } = this.state;
+    return (
+      <View>
+        {this.renderToaster()}
         <View style={styles.opsLogoStyle}>
-          <OpsLogo/>
+          <OpsLogo />
         </View>
-        <View>
-          <Picker
-            selectedValue={this.state.isAnonymous}
-            onValueChange={(itemValue) => this.setState({isAnonymous: itemValue})}
-            style={styles.picker}
-          >
-            <Picker.Item label="Stay anonymous" value={1}/>
-            {!this.state.locationDisabled ? <Picker.Item label="Use my current location" value={0}/> : undefined}
-          </Picker>
-        </View>
-        {this.state.isAnonymous ? <Text style={styles.textStyle}>Select City</Text> : undefined}
-        {this.state.isAnonymous ? <CityCarousel items={this.renderCities()} /> : undefined}
-        {!this.state.isAnonymous ?
-        <ResponsiveButton
-          onPress={this.enableLocationServices}
-          horizontalGradient={true}
-          labelStyle={{fontWeight: '600'}}
-          style={styles.continueButton}
-          gradientColors={['#F3CB14', '#E58B37']}
-          label="Continue"
-        /> : undefined }
-        <Text style={styles.disclaimer}>
-          No information will be tracked or saved.
-        </Text>
+        <Picker 
+          selectedValue={isAnonymous} 
+          onValueChange={itemValue => this.setState({ isAnonymous: itemValue }) }>
+          <Picker.Item label="Stay anonymous" value={1} />
+          {!locationDisabled ? ( <Picker.Item label="Use my current location" value={0} /> ) : ( undefined )}
+        </Picker>
       </View>
     );
+  }
+
+  renderDisclaimer() {
+    return (
+      <Text style={styles.disclaimer}>
+        No information will be tracked or saved.
+      </Text>
+    )
+  }
+
+  render() {
+    const { isAnonymous, fetchStatus, cities, sites } = this.state;
+    if (isAnonymous) {
+      if (fetchStatus === "Success") {
+        return (
+          <View style={styles.containerStyle}>
+            {this.renderLogoAndPicker()}
+            <View style={styles.carouselContainer}>
+              <Text style={styles.textStyle}>Select City</Text>
+              <CityCarousel cities={cities} sites={sites} navigation={this.props.navigation}/>
+            </View>
+            {this.renderDisclaimer()}
+          </View>
+        );
+      } else if (fetchStatus === "Failure") {
+        return (
+          <View style={styles.containerStyle}>
+            {this.renderLogoAndPicker()}
+            <View style={styles.carouselContainer}>
+              <Text style={styles.disclaimer}>An error occurred while retrieving the data. Please try again.</Text>
+              <ResponsiveButton
+                onPress={() => {this.setState({fetchStatus: 'Loading'}); this.componentDidMount()}}
+                horizontalGradient={true}
+                labelStyle={{ fontWeight: "600" }}
+                style={styles.tryAgainButton}
+                gradientColors={["#F3CB14", "#E58B37"]}
+                label="Try Again"
+              />
+            </View>
+            {this.renderDisclaimer()}
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.containerStyle}>
+            {this.renderLogoAndPicker()}
+            <View style={styles.carouselContainer}>
+              <Image style={{width: 60, height: 60}} source={require('../../assets/loading_spinner.gif')} />
+              <Text style={styles.disclaimer}>Loading</Text>
+            </View>
+            {this.renderDisclaimer()}
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View style={styles.containerStyle}>
+          {this.renderLogoAndPicker()}
+          <ResponsiveButton
+            onPress={this.enableLocationServices}
+            horizontalGradient={true}
+            labelStyle={{ fontWeight: "600" }}
+            style={styles.continueButton}
+            gradientColors={["#F3CB14", "#E58B37"]}
+            label="Continue"
+          />
+          {this.renderDisclaimer()}
+        </View>
+      );
+    }
   }
 }
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  },
+  opsLogoStyle: {
+    marginTop: 35,
+    alignSelf: 'center'
+  },
   continueButton: {
     alignItems: 'center',
+    alignSelf: 'center',
     padding: 15,
     width: windowWidth * 0.8,
     borderRadius: 30,
     marginTop: windowHeight * 0.05,
   },
-  cityButton: {
-    alignItems: 'flex-start',
-    padding: 20,
-    width: windowWidth * 0.4,
-    borderRadius: 15,
-    marginLeft: windowWidth * 0.02,
-    marginRight: windowWidth * 0.02,
+  tryAgainButton: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 30,
   },
-  picker: {
-    backgroundColor: '#FFF',
-    color: '#000',
-    height: windowWidth * 0.5,
-    width: windowWidth
+  carouselContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   textStyle: {
     color: "#474a59",
     fontWeight: '300',
-    width: '80%',
+    width: windowWidth * 0.85,
     fontSize: 18,
-    marginLeft: 15,
-    marginTop: 15
+    alignSelf: 'center',
+    marginBottom: 10
   },
   disclaimer: {
-    marginTop: '5%',
-    fontWeight: '200'
-  },
-  opsLogoStyle: {
-    padding: 0,
-    marginTop: "5%"
-  },
-  containerStyle: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    marginBottom: 15,
+    fontWeight: '200',
+    textAlign: 'center'
   }
 });
 
