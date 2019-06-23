@@ -21,6 +21,7 @@ type Props = {
   itemMini?: object,
   itemFull: object,
   disablePressToShow?: boolean,
+  disableSwipeDown? : boolean,
   style?: object,
   onShowMini?: () => void,
   onShowFull?: () => void,
@@ -28,7 +29,8 @@ type Props = {
 };
 export default class SwipeUpDown extends Component<Props> {
   static defaultProps = {
-    disablePressToShow: false
+    disablePressToShow: false,
+    disableSwipeDown: false
   };
   constructor(props) {
     super(props);
@@ -36,6 +38,7 @@ export default class SwipeUpDown extends Component<Props> {
       collapsed: true
     };
     this.disablePressToShow = props.disablePressToShow;
+    this.disableSwipeDown = props.disableSwipeDown;
     this.SWIPE_HEIGHT = props.swipeHeight || 60;
     this._panResponder = null;
     this.top = this.SWIPE_HEIGHT;
@@ -49,6 +52,7 @@ export default class SwipeUpDown extends Component<Props> {
     };
     this.checkCollapsed = true;
     this.showFull = this.showFull.bind(this);
+    this.hide = this.hide.bind(this);
   }
 
   componentWillMount() {
@@ -84,7 +88,8 @@ export default class SwipeUpDown extends Component<Props> {
   _onPanResponderMove(event, gestureState) {
     if (gestureState.dy > 0 && !this.checkCollapsed) {
       // SWIPE DOWN
-
+      if (this.disableSwipeDown) return;
+      
       this.customStyle.style.top = this.top + gestureState.dy;
       this.customStyle.style.height = DEVICE_HEIGHT - gestureState.dy;
       this.swipeIconRef && this.swipeIconRef.setState({ icon: images.minus });
@@ -113,8 +118,19 @@ export default class SwipeUpDown extends Component<Props> {
     if (gestureState.dy < -100 || gestureState.dy < 100) {
       this.showFull();
     } else {
-      this.showMini();
+      if (!this.disableSwipeDown) {
+        this.showMini();
+      }
     }
+  }
+
+  hide() {
+    this.customStyle.style.top = DEVICE_HEIGHT;
+    this.customStyle.style.height = 0;
+    this.swipeIconRef && this.swipeIconRef.setState({ showIcon: false });
+    this.updateNativeProps();
+    !this.state.collapsed && this.setState({ collapsed: true });
+    this.checkCollapsed = true;
   }
 
   showFull() {
@@ -131,7 +147,7 @@ export default class SwipeUpDown extends Component<Props> {
 
   showMini() {
     const { swipeHeight, onShowMini, itemMini } = this.props;
-    this.SWIPE_HEIGHT = (swipeHeight * 2) || 120; //Avoid hiding when swiping down.
+    this.SWIPE_HEIGHT = (swipeHeight +  60) || 120; //Avoid hiding when swiping down.
     this.customStyle.style.top = itemMini
       ? DEVICE_HEIGHT - this.SWIPE_HEIGHT
       : DEVICE_HEIGHT;
