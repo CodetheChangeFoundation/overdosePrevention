@@ -1,17 +1,12 @@
 import React from "react";
-import { Dimensions, Text, TextInput, View, ScrollView, StyleSheet, Button, TouchableHighlight, Image } from "react-native";
-import { MapView } from "expo";
-import { Ionicons } from '@expo/vector-icons';
-import { SearchBar } from 'react-native-elements';
+import { View } from "react-native";
 import PropTypes from "prop-types";
-import SwipeUpSearch from '../components/SwipeUpSearch';
-import MapPopup from "../components/MapPopup";
+import { MapView } from "expo";
 import MapViewDirections from 'react-native-maps-directions';
-import ResponsiveButton from "../components/ResponsiveButton";
-import SwipeUpDown from '../components/react-native-swipe-up-down/index';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import SwipeUpSearch from '../components/SwipeUpSearch';
+import SwipeUpDirections from '../components/SwipeUpDirections';
+import MapPopup from "../components/MapPopup";
 
-const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
 const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
 const MARKER_IMAGES = {
@@ -38,7 +33,6 @@ export default class MapScreen extends React.Component {
       servicesToDisplay: undefined,
       modalVisible: false,
       drawRoute: false,
-      searchLocation: '',
       travelMode: 'DRIVING',
       instructions: undefined
     }
@@ -48,8 +42,16 @@ export default class MapScreen extends React.Component {
     this.isAnonymous = this.props.navigation.getParam('isAnonymous');
     this.currentRegion = {...initialOrigin, ...DELTAS};
     this.filterSites = this.filterSites.bind(this);
-    this.drawRoute = this.drawRoute.bind(this);
+    this.centerMapOnRoute = this.centerMapOnRoute.bind(this);
     this.changeTravelMode = this.changeTravelMode.bind(this);
+    this.setOrigin = this.setOrigin.bind(this);
+  }
+
+  setOrigin(lat, lng) {
+    this.origin = {
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng)
+    };
   }
 
   changeTravelMode(mode) {
@@ -91,18 +93,8 @@ export default class MapScreen extends React.Component {
       });
     }
   }
-
-  createSiteDescription(hours, street, province, postalCode, phoneNumber) {
-    return `${street}, ${postalCode} ${province}\n${this.formatPhoneNumber(phoneNumber)}${hours}`;
-  }
-
-  formatPhoneNumber(phoneNumber) {
-    if (phoneNumber) {
-      return `${phoneNumber}\n`;
-    }
-  }
   
-  drawRoute() {
+  centerMapOnRoute() {
     this.setState({
       modalVisible: false,
       drawRoute: true
@@ -127,25 +119,10 @@ export default class MapScreen extends React.Component {
   }
 
 	render() {
-    const { region, modalVisible, drawRoute, searchLocation, travelMode, instructions } = this.state;
+    const { region, modalVisible, drawRoute, travelMode, instructions } = this.state;
 
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        {/* <SearchBar
-          round={true}
-          placeholder="Search for a place or address"
-          containerStyle={{backgroundColor: '#CCD2DD', height: 45}}
-          platform="default"
-          inputContainerStyle={{backgroundColor: '#CCD2DD'}}
-          inputStyle={{
-            backgroundColor: '#BABFC6', 
-            borderRadius: 7
-          }}
-          lightTheme={true}
-          searchIcon={null}
-          clearIcon={null}
-        /> */}
-        
         <MapView
           style={{ flex: 1 }}
           provider="google"
@@ -169,215 +146,40 @@ export default class MapScreen extends React.Component {
             mode={travelMode}
             strokeWidth={3}
             strokeColor="#4289DD"
-            apikey={GOOGLE_MAPS_APIKEY} 
-            onStart={(params) => {
-              // console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
-              // console.log(params.waypoints);
-            }} 
+            apikey={GOOGLE_MAPS_APIKEY}
             onReady={result => {
-              // console.log(`Distance: ${result.distance} km`);
-              // console.log(`Duration: ${result.duration} min.`);
-              // console.log(result.coordinates);
-              // console.log(result.fare);
-              // console.log(result.instructions);
               this.setState({instructions: result.instructions});
-            }} />
-          : undefined}
+            }}
+          /> : undefined}
         </MapView>
 
-        <SwipeUpSearch
+        <SwipeUpSearch 
           onServicePress={this.filterSites}
         />
 
-        {drawRoute ?
-          <SwipeUpDown
-            animation="easeInEaseOut"
-            disablePressToShow={true}
-            hasRef={ref => (this.swipeUpDownRef = ref)}
-            onMoveDown={() => this.swipeUpDownRef.showFull()}
-            // disableSwipeDown={this.origin === undefined ? true : false}
-            itemMini={
-              <View>
-                <Text style={styles.clickableText} onPress={() => {this.setState({drawRoute: false})}}>Cancel</Text>
-                <Text>To {this.destination.name}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text>From: </Text>{!this.isAnonymous ? <Text>Current location</Text> : <Text style={styles.clickableText} onPress={() => {this.swipeUpDownRef.showFull()}}>{searchLocation != '' ? searchLocation : 'Enter a location'}</Text>}
-                </View>
-                {/* <Text>{this.origin === undefined ? '' : 'TODO: Show Turn By Turn Directions'}</Text> */}
-                <Text>{instructions === undefined ? 'undefined' : instructions.map(a => { return a })}</Text>
-                <View style={styles.travelModeBar}>
-                  <Ionicons name="md-car" size={32} color={travelMode === 'DRIVING' ? '#E58B37' : '#BDB8B3'} onPress={() => this.changeTravelMode('DRIVING')}/>
-                  <Ionicons name="md-subway" size={32} color={travelMode === 'TRANSIT' ? '#E58B37' : '#BDB8B3'} onPress={() => this.changeTravelMode('TRANSIT')}/>
-                  <Ionicons name="md-walk" size={32} color={travelMode === 'WALKING' ? '#E58B37' : '#BDB8B3'} onPress={() => this.changeTravelMode('WALKING')}/>
-                  <Ionicons name="md-bicycle" size={32} color={travelMode === 'BICYCLING' ? '#E58B37' : '#BDB8B3'} onPress={() => this.changeTravelMode('BICYCLING')}/>
-                </View>
-              </View>
-            }
-            itemFull={
-              <View style={styles.itemFull}>
-                <Text style={styles.clickableText} onPress={() => {this.setState({drawRoute: false})}}>Cancel</Text>
-                <Text>To {this.destination.name}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text>From: {!this.isAnonymous ? 'Current location' : ''}</Text>
-                </View>
-                {this.isAnonymous ?
-                  <GooglePlacesAutocomplete
-                    placeholder='Enter Location'
-                    minLength={2}
-                    autoFocus={false}
-                    returnKeyType={'default'}
-                    fetchDetails={true}
-                    query={{ key: GOOGLE_MAPS_APIKEY, types: 'address' }}
-                    disableScroll={true}
-                    isRowScrollable={false}
-                    getDefaultValue={() => searchLocation}
-                    predefinedPlaces={!this.isAnonymous ? [this.currentLocation] : []}
-                    styles={{
-                      textInputContainer: {
-                        backgroundColor: 'rgba(0,0,0,0)',
-                        borderTopWidth: 0,
-                        borderBottomWidth:0
-                      },
-                      textInput: {
-                        marginLeft: 0,
-                        marginRight: 0,
-                        height: 38,
-                        color: '#5d5d5d',
-                        fontSize: 16
-                      },
-                      predefinedPlacesDescription: {
-                        color: '#1faadb'
-                      },
-                    }}
-                    listViewDisplayed={false}
-                    onPress={(data, details = null) => {
-                      this.setState({searchLocation: details.formatted_address});
-                      this.origin = {
-                        latitude: parseFloat(details.geometry.location.lat),
-                        longitude: parseFloat(details.geometry.location.lng)
-                      };
-                      this.swipeUpDownRef.showMini();
-                      this.drawRoute();
-                    }}
-                  />
-                : undefined }
-                {/* <Text>{this.origin === undefined ? '' : 'TODO: Show Turn By Turn Directions'}</Text> */}
-                <Text>{instructions === undefined ? 'undefined' : instructions.map(a => { return a })}</Text>
-              </View>
-            }
-            style={styles.swipeUpDirections}
-            swipeHeight={WINDOW_HEIGHT/3}
-          />
-        : undefined}
+        <SwipeUpDirections 
+          centerMapOnRoute={this.centerMapOnRoute}
+          changeTravelMode={this.changeTravelMode}
+          destination={this.destination}
+          drawRoute={drawRoute}
+          hideDirections={() => this.setState({ drawRoute: false })}
+          instructions={instructions}
+          isAnonymous={this.isAnonymous}
+          setOrigin={this.setOrigin}
+          travelMode={travelMode}
+        />
         
-        {modalVisible ?
-          <View style={styles.modalContainer}>
-            <View style={styles.modal}>
-              <ScrollView 
-                alwaysBounceVertical={true}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false} 
-              >
-                <Text>{this.destination.name}</Text>
-                <Text>{`\n`}Address</Text>
-                <Text>{this.destination.street}</Text>
-                <Text>{this.destination.province}, {this.destination.country}</Text>
-                <Text>{this.destination.postal_code}</Text>
-                <Text>{`\n`}Phone Number</Text>
-                <Text>{this.destination.phone_number}</Text>
-                <Text>{`\n`}Hours</Text>
-                <Text>{this.destination.hours}</Text>
-              </ScrollView>
-            </View>
-            <View style={styles.closeButtonContainer}>
-              <ResponsiveButton
-                key='close'
-                label='X'
-                labelStyle={{fontWeight: '600'}}
-                style={styles.closeButton}
-                gradientColors={['#F3CB14', '#E58B37']}
-                horizontalGradient={true}
-                onPress={() => this.setState({modalVisible: false})}
-              />
-            </View>
-            <View style={styles.directionsButtonContainer}>
-              <ResponsiveButton
-                key='directions'
-                label='Directions'
-                labelStyle={{fontWeight: '600'}}
-                style={styles.directionsButton}
-                gradientColors={['#F3CB14', '#E58B37']}
-                horizontalGradient={true}
-                onPress={() => this.drawRoute()}
-              />
-            </View>
-          </View>
-        : undefined}
+        <MapPopup 
+          centerMapOnRoute={this.centerMapOnRoute}
+          destination={this.destination} 
+          hideModal={() => this.setState({modalVisible: false})}
+          modalVisible={modalVisible}
+        />
 
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  clickableText: {
-    color: '#4289DD',
-    textDecorationLine: 'underline'
-  },
-  modalContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingBottom: 60,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  modal: {
-    flexDirection: 'column',
-    backgroundColor: '#FFF',
-    width: WINDOW_WIDTH * 0.8,
-    height: WINDOW_HEIGHT * 2/3,
-    paddingHorizontal: 30,
-    borderTopLeftRadius: 30,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    borderWidth: 3,
-    borderColor: '#E58B37',
-    justifyContent: 'space-between'
-  },
-  closeButtonContainer: {
-    position: 'absolute',
-    bottom: (WINDOW_HEIGHT * 5/6) - 12,
-    right: (WINDOW_WIDTH * 0.1) - 20,
-  },
-  closeButton: {
-    paddingVertical: 11,
-    paddingHorizontal: 15,
-    borderRadius: 100
-  },
-  directionsButtonContainer: {
-    marginTop: -25
-  },
-  directionsButton: {
-    alignSelf: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 100
-  },
-  swipeUpDirections: {
-    backgroundColor: '#FFF'
-  },
-  travelModeBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around'
-  },
-  itemFull: {
-    height: '100%'
-  }
-});
 
 MapScreen.propTypes = {
 	navigation: PropTypes.object.isRequired
