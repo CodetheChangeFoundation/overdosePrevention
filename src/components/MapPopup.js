@@ -1,6 +1,8 @@
 import React from 'react';
-import { Dimensions, Text, View, ScrollView, StyleSheet } from "react-native";
+import { Dimensions, Text, View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
+import { LinearGradient } from 'expo';
+import { Ionicons } from '@expo/vector-icons';
 import ResponsiveButton from "../components/ResponsiveButton";
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
@@ -21,18 +23,36 @@ class MapPopup extends React.Component {
     }
   }
 
-  createSiteDescription(hours, street, province, postalCode, phoneNumber) {
-    return `${street}, ${postalCode} ${province}\n${this.formatPhoneNumber(phoneNumber)}${hours}`;
+  formatAddress(street, province, country, postal_code) {
+    let output = '';
+    if (street) output += street + '\n';
+    if (province && country) {
+      output += province + ', ' + country + '\n';
+    } else if (province) {
+      output += province + '\n';
+    } else if (country) {
+      output += country + '\n';
+    }
+    if (postal_code) output += postal_code + '\n';
+    return output.substring(0, output.length-2);
   }
 
   formatPhoneNumber(phoneNumber) {
-    if (phoneNumber) {
-      return `${phoneNumber}\n`;
+    var cleaned = ('' + phoneNumber).replace(/\D/g, '')
+    var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+      return '(' + match[1] + ') ' + match[2] + '-' + match[3]
     }
+    return null
+  }
+
+  formatHours(hours) {
+    return hours;
   }
 
   render() {
     if (this.state.modalVisible) {
+      const { name, service, street, province, country, postal_code, phone_number, hours } = this.props.destination;
       return (
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
@@ -41,27 +61,43 @@ class MapPopup extends React.Component {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false} 
             >
-              <Text>{this.props.destination.name}</Text>
-              <Text>{`\n`}Address</Text>
-              <Text>{this.props.destination.street}</Text>
-              <Text>{this.props.destination.province}, {this.props.destination.country}</Text>
-              <Text>{this.props.destination.postal_code}</Text>
-              <Text>{`\n`}Phone Number</Text>
-              <Text>{this.props.destination.phone_number}</Text>
-              <Text>{`\n`}Hours</Text>
-              <Text>{this.props.destination.hours}</Text>
+              {service ? <Text style={styles.small}>{service.toUpperCase()}</Text> : null}
+              {name ? <Text style={styles.title}>{name}</Text> : null}
+              
+              {(street || province || country || postal_code) ?
+                <View>
+                  <Text style={styles.heading}>Address</Text>
+                  <Text style={styles.body}>{this.formatAddress(street, province, country, postal_code)}</Text>
+                </View>
+              : null}
+
+              {phone_number ?
+                <View>
+                  <Text style={styles.heading}>Phone Number</Text>
+                  <Text style={styles.body}>{this.formatPhoneNumber(phone_number)}</Text>
+                </View>
+              : null}
+
+              {hours ?
+                <View>
+                  <Text style={styles.heading}>Hours</Text>
+                  <Text style={styles.body}>{this.formatHours(hours)}</Text>
+                </View>
+              : null}
+              
             </ScrollView>
           </View>
           <View style={styles.closeButtonContainer}>
-            <ResponsiveButton
-              key='close'
-              label='X'
-              labelStyle={{fontWeight: '600'}}
-              style={styles.closeButton}
-              gradientColors={['#F3CB14', '#E58B37']}
-              horizontalGradient={true}
-              onPress={this.props.hideModal}
-            />
+            <TouchableOpacity onPress={this.props.hideModal}>
+              <LinearGradient
+                colors={['#F3CB14', '#E58B37']}
+                style={styles.closeButton}
+                start={[0,0]}
+                end={[1,0]}
+              >
+                <Ionicons name="md-close" size={28} color='#FFF'/>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
           <View style={styles.directionsButtonContainer}>
             <ResponsiveButton
@@ -99,23 +135,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     width: WINDOW_WIDTH * 0.8,
     height: WINDOW_HEIGHT * 2 / 3,
-    paddingHorizontal: 30,
-    borderTopLeftRadius: 30,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    paddingHorizontal: 25,
+    borderRadius: 20,
     borderWidth: 3,
     borderColor: '#E58B37',
     justifyContent: 'space-between'
   },
   closeButtonContainer: {
     position: 'absolute',
-    bottom: (WINDOW_HEIGHT * 5 / 6) - 12,
-    right: (WINDOW_WIDTH * 0.1) - 20,
+    bottom: (WINDOW_HEIGHT * 5 / 6) - 15,
+    right: (WINDOW_WIDTH * 0.1) - 15,
   },
   closeButton: {
-    paddingVertical: 11,
-    paddingHorizontal: 15,
-    borderRadius: 100
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+    borderRadius: 28
   },
   directionsButtonContainer: {
     marginTop: -25
@@ -125,6 +159,24 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 50,
     borderRadius: 100
+  },
+  title: {
+    fontSize: 20
+  },
+  heading: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 14,
+    marginBottom: 3
+  },
+  small: {
+    fontSize: 10,
+    fontWeight: '600',
+    marginTop: 15,
+    marginBottom: 5
+  },
+  body: {
+    fontSize: 16
   }
 });
 
