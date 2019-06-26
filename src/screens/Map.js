@@ -1,7 +1,8 @@
 import React from "react";
-import { View } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
 import { MapView } from "expo";
+import { Ionicons } from '@expo/vector-icons';
 import MapViewDirections from 'react-native-maps-directions';
 import SwipeUpSearch from '../components/SwipeUpSearch';
 import SwipeUpDirections from '../components/SwipeUpDirections';
@@ -139,47 +140,81 @@ export default class MapScreen extends React.Component {
             } : undefined}
         >
           {this.renderSites()}
-          {drawRoute && this.origin !== undefined && this.destination !== undefined ? 
-          <MapViewDirections 
-            origin={this.origin} 
-            destination = {{ latitude: parseFloat(this.destination.lat), longitude: parseFloat(this.destination.lon) }}
-            mode={travelMode}
-            strokeWidth={3}
-            strokeColor="#4289DD"
-            apikey={GOOGLE_MAPS_APIKEY}
-            onReady={result => {
-              this.setState({instructions: result.instructions});
-            }}
-          /> : undefined}
+          { drawRoute && this.origin !== undefined && this.destination !== undefined &&
+            <MapViewDirections 
+              origin={this.origin} 
+              destination = {{ latitude: parseFloat(this.destination.lat), longitude: parseFloat(this.destination.lon) }}
+              mode={travelMode}
+              strokeWidth={3}
+              strokeColor="#4289DD"
+              apikey={GOOGLE_MAPS_APIKEY}
+              onReady={result => {
+                this.setState({instructions: result.instructions});
+              }}
+            />
+          }
         </MapView>
 
         <SwipeUpSearch 
           onServicePress={this.filterSites}
         />
 
-        <SwipeUpDirections 
-          centerMapOnRoute={this.centerMapOnRoute}
-          changeTravelMode={this.changeTravelMode}
-          destination={this.destination}
-          drawRoute={drawRoute}
-          hideDirections={() => this.setState({ drawRoute: false })}
-          instructions={instructions}
-          isAnonymous={this.isAnonymous}
-          setOrigin={this.setOrigin}
-          travelMode={travelMode}
-        />
+        { drawRoute &&
+          <SwipeUpDirections 
+            centerMapOnRoute={this.centerMapOnRoute}
+            destination={this.destination}
+            hideDirections={() => this.setState({ drawRoute: false })}
+            instructions={instructions}
+            isAnonymous={this.isAnonymous}
+            setOrigin={this.setOrigin}
+          />
+        }
+
+        { drawRoute &&
+          <View style={styles.travelModeBar}>
+            <TouchableOpacity onPress={() => this.changeTravelMode('DRIVING')}>
+              <Ionicons name="md-car" size={32} color={travelMode === 'DRIVING' ? '#E58B37' : '#BDB8B3'}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.changeTravelMode('TRANSIT')}>
+              <Ionicons name="md-subway" size={32} color={travelMode === 'TRANSIT' ? '#E58B37' : '#BDB8B3'}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.changeTravelMode('WALKING')}>
+              <Ionicons name="md-walk" size={32} color={travelMode === 'WALKING' ? '#E58B37' : '#BDB8B3'}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.changeTravelMode('BICYCLING')}>
+              <Ionicons name="md-bicycle" size={32} color={travelMode === 'BICYCLING' ? '#E58B37' : '#BDB8B3'}/>
+            </TouchableOpacity>
+          </View>
+        }
         
-        <MapPopup 
-          centerMapOnRoute={this.centerMapOnRoute}
-          destination={this.destination} 
-          hideModal={() => this.setState({modalVisible: false})}
-          modalVisible={modalVisible}
-        />
+        { modalVisible &&
+          <MapPopup 
+            centerMapOnRoute={this.centerMapOnRoute}
+            destination={this.destination} 
+            hideModal={() => this.setState({modalVisible: false})}
+          />
+        }
 
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  travelModeBar: {
+    backgroundColor: '#FFF',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    height: 42,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    borderTopWidth: 1,
+    paddingTop: 8,
+    paddingBottom: 2
+  }
+})
 
 MapScreen.propTypes = {
 	navigation: PropTypes.object.isRequired

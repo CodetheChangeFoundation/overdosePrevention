@@ -10,17 +10,6 @@ const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
 class MapPopup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: this.props.modalVisible
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.modalVisible != prevProps.modalVisible) {
-      this.setState({
-        modalVisible: this.props.modalVisible
-      })
-    }
   }
 
   formatAddress(street, province, country, postal_code) {
@@ -51,70 +40,66 @@ class MapPopup extends React.Component {
   }
 
   render() {
-    if (this.state.modalVisible) {
-      const { name, service, street, province, country, postal_code, phone_number, hours } = this.props.destination;
-      return (
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <ScrollView 
-              alwaysBounceVertical={true}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false} 
-            >
-              {service ? <Text style={styles.small}>{service.toUpperCase()}</Text> : null}
-              {name ? <Text style={styles.title}>{name}</Text> : null}
-              
-              {(street || province || country || postal_code) ?
-                <View>
-                  <Text style={styles.heading}>Address</Text>
-                  <Text style={styles.body}>{this.formatAddress(street, province, country, postal_code)}</Text>
-                </View>
-              : null}
+    const { name, service, street, province, country, postal_code, phone_number, hours } = this.props.destination;
+    return (
+      <View style={styles.modalContainer}>
+        <View style={styles.modal}>
+          <ScrollView 
+            alwaysBounceVertical={true}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false} 
+          >
+            {service ? <Text style={styles.small}>{service.toUpperCase()}</Text> : null}
+            {name ? <Text style={styles.title}>{name}</Text> : null}
+            
+            {(street || province || country || postal_code) ?
+              <View>
+                <Text style={styles.heading}>Address</Text>
+                <Text style={styles.body}>{this.formatAddress(street, province, country, postal_code)}</Text>
+              </View>
+            : null}
 
-              {phone_number ?
-                <View>
-                  <Text style={styles.heading}>Phone Number</Text>
-                  <Text style={styles.body}>{this.formatPhoneNumber(phone_number)}</Text>
-                </View>
-              : null}
+            {phone_number ?
+              <View>
+                <Text style={styles.heading}>Phone Number</Text>
+                <Text style={styles.body}>{this.formatPhoneNumber(phone_number)}</Text>
+              </View>
+            : null}
 
-              {hours ?
-                <View>
-                  <Text style={styles.heading}>Hours</Text>
-                  <Text style={styles.body}>{this.formatHours(hours)}</Text>
-                </View>
-              : null}
-              
-            </ScrollView>
-          </View>
-          <View style={styles.closeButtonContainer}>
-            <TouchableOpacity onPress={this.props.hideModal}>
-              <LinearGradient
-                colors={['#F3CB14', '#E58B37']}
-                style={styles.closeButton}
-                start={[0,0]}
-                end={[1,0]}
-              >
-                <Ionicons name="md-close" size={28} color='#FFF'/>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.directionsButtonContainer}>
-            <ResponsiveButton
-              key='directions'
-              label='Directions'
-              labelStyle={{fontWeight: '600'}}
-              style={styles.directionsButton}
-              gradientColors={['#F3CB14', '#E58B37']}
-              horizontalGradient={true}
-              onPress={() => this.props.centerMapOnRoute()}
-            />
-          </View>
+            {hours &&
+              <View>
+                <Text style={styles.heading}>Hours</Text>
+                <Text style={styles.body}>{this.formatHours(hours)}</Text>
+              </View>
+            }
+            
+          </ScrollView>
         </View>
-      );
-    } else {
-      return null;
-    }
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity onPress={this.props.hideModal}>
+            <LinearGradient
+              colors={['#F3CB14', '#E58B37']}
+              style={styles.closeButton}
+              start={[0,0]}
+              end={[1,0]}
+            >
+              <Ionicons name="md-close" size={28} color='#FFF'/>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.directionsButtonContainer}>
+          <ResponsiveButton
+            key='directions'
+            label='Directions'
+            labelStyle={{fontWeight: '600'}}
+            style={styles.directionsButton}
+            gradientColors={['#F3CB14', '#E58B37']}
+            horizontalGradient={true}
+            onPress={() => this.props.centerMapOnRoute()}
+          />
+        </View>
+      </View>
+    );
   }
 }
 
@@ -182,7 +167,6 @@ const styles = StyleSheet.create({
 
 MapPopup.propTypes = {
   destination: PropTypes.object,
-  modalVisible: PropTypes.bool.isRequired,
   centerMapOnRoute: PropTypes.func.isRequired,
   hideModal: PropTypes.func.isRequired
 };
