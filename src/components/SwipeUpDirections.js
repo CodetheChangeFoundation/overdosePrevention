@@ -30,6 +30,49 @@ class SwipeUpDirections extends React.Component {
     }
   }
 
+  renderHeader(isMini) {
+    const { searchLocation } = this.state;
+    let closeButton, fromText = null;
+
+    if (isMini) {
+      closeButton = (
+        <TouchableOpacity onPress={() => this.props.hideDirections}>
+          <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/>
+        </TouchableOpacity>
+      );
+    } else {
+      closeButton = (
+        <TouchableOpacity onPress={() => this.swipeUpDownRef.showMini()}>
+          <Text style={[styles.subtitle, styles.clickableText]}>Done</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    if (!this.props.isAnonymous) {
+      fromText = 'My Location';
+    } else {
+      fromText = (
+        <Text 
+          style={[styles.clickableText, styles.body]}
+          onPress={() => {this.setState({showSearch: true, autoFocus: true}); this.swipeUpDownRef.showFull()}}>
+            {searchLocation != '' ? searchLocation : 'Enter a location'}
+        </Text>
+      );
+    }
+
+    return (
+      <View style={{flexDirection: 'row', paddingBottom: 10, borderBottomWidth: 1}}>
+        <View style={{flex: 1, marginRight: 10}}>
+          <Text style={styles.subtitle}>To {this.props.destination.name}</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.body}>From: {fromText}</Text>
+          </View>
+        </View>
+        {closeButton}
+      </View>
+    );
+  }
+
   renderInstructions() {
     const { instructions } = this.state;
     if (instructions === undefined) return null;
@@ -54,17 +97,7 @@ class SwipeUpDirections extends React.Component {
         swipeHeight={WINDOW_HEIGHT/3}
         itemMini={
           <View style={styles.itemMini}>
-            <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 10, borderBottomWidth: 1}}>
-              <View style={{flex: 1, marginRight: 10}}>
-                <Text style={styles.subtitle}>To {this.props.destination.name}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.body}>From: {!this.props.isAnonymous ? <Text style={styles.body}>My Location</Text> : <Text style={[styles.clickableText, styles.body]} onPress={() => {this.setState({showSearch: true, autoFocus: true}); this.swipeUpDownRef.showFull()}}>{searchLocation != '' ? searchLocation : 'Enter a location'}</Text>}</Text>
-                </View>
-              </View>
-              <TouchableOpacity onPress={this.props.hideDirections}>
-                <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/>
-              </TouchableOpacity>
-            </View>
+            {this.renderHeader(true)}
 
             <View style={styles.instructions}>
               {this.renderInstructions()}
@@ -73,18 +106,7 @@ class SwipeUpDirections extends React.Component {
         }
         itemFull={
           <View style={styles.itemFull}>
-            <View style={{flexDirection: 'row', paddingBottom: 10, borderBottomWidth: 1}}>
-              <View style={{flex: 1, marginRight: 10}}>
-                <Text style={styles.subtitle}>To {this.props.destination.name}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={styles.body}>From: {!this.props.isAnonymous ? 'My Location' : !showSearch ? <Text style={[styles.clickableText, styles.body]} onPress={() => this.setState({showSearch: true})}>{searchLocation}</Text> : null}</Text>
-                </View>
-              </View>
-              <TouchableOpacity onPress={() => this.swipeUpDownRef.showMini()}>
-                {/* <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/> */}
-                <Text style={[styles.subtitle, styles.clickableText]}>Done</Text>
-              </TouchableOpacity>
-            </View>
+            {this.renderHeader(false)}
 
             {(this.props.isAnonymous && showSearch) ?
               <GooglePlacesAutocomplete
@@ -144,31 +166,17 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#FFF'
   },
-  title: {
-    fontSize: 20
-  },
   subtitle: {
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 3
   },
-  heading: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginTop: 14,
-    marginBottom: 3
-  },
-  small: {
-    fontSize: 10,
-    fontWeight: '600',
-    marginTop: 15,
-    marginBottom: 5
-  },
   body: {
     fontSize: 16
   },
   instructions: {
-    paddingVertical: 5
+    paddingVertical: 5,
+    marginBottom: 100
   }
 });
 

@@ -147,7 +147,7 @@ export default class SwipeUpDown extends Component<Props> {
   render() {
     const { itemMini, itemFull, style } = this.props;
     const { collapsed, disableSwipeDown } = this.state;
-    let gestures = (!collapsed && disableSwipeDown) ? null : this._panResponder.panHandlers;
+    let gestures = (!this.checkCollapsed && !collapsed && disableSwipeDown) ? null : this._panResponder.panHandlers;
     return (
       <View
         ref={ref => (this.viewRef = ref)}
