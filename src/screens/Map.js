@@ -1,12 +1,12 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import PropTypes from "prop-types";
 import { MapView } from "expo";
-import { Ionicons } from '@expo/vector-icons';
 import MapViewDirections from 'react-native-maps-directions';
 import SwipeUpSearch from '../components/SwipeUpSearch';
 import SwipeUpDirections from '../components/SwipeUpDirections';
 import MapPopup from "../components/MapPopup";
+import TravelModeBar from "../components/TravelModeBar";
 
 const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
@@ -96,7 +96,6 @@ export default class MapScreen extends React.Component {
             }}
             onPress={() => { this.destination = site; this.setState({region: this.currentRegion, modalVisible: true}) }}
             image={MARKER_IMAGES[site.service] ? MARKER_IMAGES[site.service] : MARKER_IMAGES["Default"]}
-            // ref={ref => { this.marker = ref; }}
           />
         );
       });
@@ -180,21 +179,11 @@ export default class MapScreen extends React.Component {
           />
         }
 
-        { drawRoute &&
-          <View style={styles.travelModeBar}>
-            <TouchableOpacity onPress={() => this.changeTravelMode('DRIVING')}>
-              <Ionicons name="md-car" size={32} color={travelMode === 'DRIVING' ? '#E58B37' : '#BDB8B3'}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.changeTravelMode('TRANSIT')}>
-              <Ionicons name="md-subway" size={32} color={travelMode === 'TRANSIT' ? '#E58B37' : '#BDB8B3'}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.changeTravelMode('WALKING')}>
-              <Ionicons name="md-walk" size={32} color={travelMode === 'WALKING' ? '#E58B37' : '#BDB8B3'}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.changeTravelMode('BICYCLING')}>
-              <Ionicons name="md-bicycle" size={32} color={travelMode === 'BICYCLING' ? '#E58B37' : '#BDB8B3'}/>
-            </TouchableOpacity>
-          </View>
+        { drawRoute && 
+          <TravelModeBar 
+            travelMode={travelMode} 
+            changeTravelMode={this.changeTravelMode}
+          />
         }
         
         { modalVisible &&
@@ -209,22 +198,6 @@ export default class MapScreen extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  travelModeBar: {
-    backgroundColor: '#FFF',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    height: 42,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    borderTopWidth: 1,
-    paddingTop: 8,
-    paddingBottom: 2
-  }
-})
 
 MapScreen.propTypes = {
 	navigation: PropTypes.object.isRequired
