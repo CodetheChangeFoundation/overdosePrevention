@@ -35,7 +35,8 @@ export default class MapScreen extends React.Component {
       modalVisible: false,
       drawRoute: false,
       travelMode: 'DRIVING',
-      instructions: undefined
+      instructions: undefined,
+      searchLocation: ''
     }
 
     this.destination = undefined;
@@ -46,6 +47,7 @@ export default class MapScreen extends React.Component {
     this.centerMapOnRoute = this.centerMapOnRoute.bind(this);
     this.changeTravelMode = this.changeTravelMode.bind(this);
     this.setOrigin = this.setOrigin.bind(this);
+    this.setSearchLocation = this.setSearchLocation.bind(this);
   }
 
   setOrigin(lat, lng) {
@@ -58,6 +60,12 @@ export default class MapScreen extends React.Component {
   changeTravelMode(mode) {
     this.setState({
       travelMode: mode
+    })
+  }
+
+  setSearchLocation(location) {
+    this.setState({
+      searchLocation: location
     })
   }
 
@@ -120,7 +128,7 @@ export default class MapScreen extends React.Component {
   }
 
 	render() {
-    const { region, modalVisible, drawRoute, travelMode, instructions } = this.state;
+    const { region, modalVisible, drawRoute, travelMode, instructions, searchLocation } = this.state;
 
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -166,6 +174,8 @@ export default class MapScreen extends React.Component {
             hideDirections={() => this.setState({ drawRoute: false })}
             instructions={instructions}
             isAnonymous={this.isAnonymous}
+            searchLocation={searchLocation}
+            setSearchLocation={this.setSearchLocation}
             setOrigin={this.setOrigin}
           />
         }

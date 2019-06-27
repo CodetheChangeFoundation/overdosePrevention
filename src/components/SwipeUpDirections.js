@@ -13,8 +13,8 @@ class SwipeUpDirections extends React.Component {
     super(props);
 
     this.state = {
-      showSearch: true,
-      searchLocation: '',
+      showSearch: this.props.searchLocation === '' ? true : false,
+      searchLocation: this.props.searchLocation,
       instructions: this.props.instructions,
       autoFocus: false
     }
@@ -24,6 +24,10 @@ class SwipeUpDirections extends React.Component {
     if (this.props.instructions != prevProps.instructions) {
       this.setState({ instructions: this.props.instructions });
     }
+
+    if (this.props.searchLocation != prevProps.searchLocation) {
+      this.setState({ searchLocation: this.props.searchLocation });
+    }
   }
 
   renderInstructions() {
@@ -32,19 +36,20 @@ class SwipeUpDirections extends React.Component {
 
     let output = [];
     for (let i = 0; i<instructions.length; i++) {
-      output.push(<Text key={i}>{instructions[i].replace(/(<([^>]+)>)/ig,"")+'\n'}</Text>);
+      output.push(<Text key={i} style={styles.body}>{instructions[i].replace(/(<([^>]+)>)/ig," ").replace(/\s+/g," ").trim()+'\n'}</Text>);
     }
     return output;
   }
 
   render() {
-    const { showSearch, searchLocation, instructions, autoFocus } = this.state;
+    const { showSearch, searchLocation, autoFocus } = this.state;
     return (
       <SwipeUpDown
         animation="easeInEaseOut"
         disablePressToShow={true}
+        disableSwipeDown={true}
         hasRef={ref => (this.swipeUpDownRef = ref)}
-        onShowMini={() => searchLocation !== '' ? this.setState({showSearch: false}) : null}
+        onShowMini={() => searchLocation !== '' && this.setState({showSearch: false})}
         style={styles.swipeUpDirections}
         swipeHeight={WINDOW_HEIGHT/3}
         itemMini={
@@ -68,15 +73,16 @@ class SwipeUpDirections extends React.Component {
         }
         itemFull={
           <View style={styles.itemFull}>
-            <View style={{flexDirection: 'row', alignItems: 'center', paddingBottom: 10, borderBottomWidth: 1}}>
+            <View style={{flexDirection: 'row', paddingBottom: 10, borderBottomWidth: 1}}>
               <View style={{flex: 1, marginRight: 10}}>
                 <Text style={styles.subtitle}>To {this.props.destination.name}</Text>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={styles.body}>From: {!this.props.isAnonymous ? 'My Location' : !showSearch ? <Text style={[styles.clickableText, styles.body]} onPress={() => this.setState({showSearch: true})}>{searchLocation}</Text> : null}</Text>
                 </View>
               </View>
-              <TouchableOpacity onPress={this.props.hideDirections}>
-                <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/>
+              <TouchableOpacity onPress={() => this.swipeUpDownRef.showMini()}>
+                {/* <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/> */}
+                <Text style={[styles.subtitle, styles.clickableText]}>Done</Text>
               </TouchableOpacity>
             </View>
 
@@ -87,13 +93,16 @@ class SwipeUpDirections extends React.Component {
                 autoFocus={autoFocus}
                 returnKeyType={'default'}
                 fetchDetails={true}
+                isRowScrollable={true}
+                disableScroll={false}
                 query={{ key: GOOGLE_MAPS_APIKEY, types: 'address' }}
                 getDefaultValue={() => searchLocation}
-                styles={{}}
+                styles={searchBarStyles}
                 renderRightButton={() => {if (searchLocation !== '') return <Text style={styles.clickableText} onPress={() => this.setState({showSearch: false})}>Cancel</Text>}}
                 textInputProps={{onFocus: () => this.setState({autoFocus: false})}}
                 onPress={(data, details = null) => {
-                  this.setState({showSearch: false, searchLocation: details.formatted_address});
+                  this.setState({showSearch: false});
+                  this.props.setSearchLocation(details.formatted_address);
                   this.props.setOrigin(details.geometry.location.lat, details.geometry.location.lng);
                   this.swipeUpDownRef.showMini();
                   this.props.centerMapOnRoute();
@@ -103,11 +112,11 @@ class SwipeUpDirections extends React.Component {
 
             {(!this.props.isAnonymous || !showSearch) ? 
               <ScrollView
-                alwaysBounceVertical={false}
-                bounces={false}
+                alwaysBounceVertical={true}
+                bounces={true}
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-
+                style={styles.instructions}
               >
                 {this.renderInstructions()}
               </ScrollView>
@@ -159,10 +168,26 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   instructions: {
-    flex: 1,
-    flexShrink: 1
+    paddingVertical: 5
   }
 });
+
+const searchBarStyles = StyleSheet.create({
+  row: {
+    width: WINDOW_WIDTH-20
+  },
+  textInputContainer: {
+    width: '100%',
+    backgroundColor: '#FFF',
+    alignItems: 'center'
+  },
+  description: {
+    fontSize: 16
+  },
+  poweredContainer: {
+    display: 'none'
+  }
+})
 
 SwipeUpDirections.propTypes = {
   centerMapOnRoute: PropTypes.func.isRequired,
@@ -170,7 +195,9 @@ SwipeUpDirections.propTypes = {
   hideDirections: PropTypes.func.isRequired,
   instructions: PropTypes.array,
   isAnonymous: PropTypes.number.isRequired,
-  setOrigin: PropTypes.func.isRequired
+  searchLocation: PropTypes.string.isRequired,
+  setOrigin: PropTypes.func.isRequired,
+  setSearchLocation: PropTypes.func.isRequired
 }
 
 export default SwipeUpDirections;
