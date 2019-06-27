@@ -29,10 +29,10 @@ class SwipeUpSearch extends React.Component {
         disablePressToShow={false}
         hasRef={ref => (this.swipeUpDownRef = ref)}
         itemMini={
-          <SearchContainer onServicePress={this.onServiceButtonClick} />
+          <SearchContainer onServicePress={this.onServiceButtonClick} servicesToDisplay={this.props.servicesToDisplay} />
         }
         itemFull={
-          <SearchContainer onServicePress={this.onServiceButtonClick} />
+          <SearchContainer onServicePress={this.onServiceButtonClick} servicesToDisplay={this.props.servicesToDisplay} />
         }
         style={styles.swipeUpSearch}
       />
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
 });
 
 SwipeUpSearch.propTypes = {
-  onServicePress: PropTypes.func.isRequired
+  onServicePress: PropTypes.func.isRequired,
+  servicesToDisplay: PropTypes.any
 }
 
 export default SwipeUpSearch;

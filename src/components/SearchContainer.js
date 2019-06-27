@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, Dimensions, TouchableOpacity } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 import PropTypes from "prop-types";
 import DetoxLogo from './logos/DetoxLogo';
 import NurseLogo from './logos/NurseLogo';
@@ -42,6 +43,10 @@ const logosToUse = {
   "Mobile Unit": {
     viewStyle: {backgroundColor: '#74DD42'},
     logo: <MobileUnitLogo/>
+  },
+  "Clear Filter": {
+    viewStyle: {backgroundColor: '#D0D0D0'},
+    logo: <View style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}><Ionicons name="md-close" size={50} color="#000" /></View>
   }
 };
 
@@ -76,6 +81,17 @@ class SearchContainer extends React.Component {
       <View style={styles.servicesBox}>
         <Text style={styles.filterStyle}>Filter</Text>
         {serviceTypes.map(this.renderService)}
+        { this.props.servicesToDisplay !== undefined &&
+          <TouchableOpacity
+            onPress={() => this.props.onServicePress(undefined)}
+            style={styles.serviceContainer}
+          >
+            <View style={[styles.serviceLogo, logosToUse["Clear Filter"].viewStyle]}>
+              {logosToUse["Clear Filter"].logo}
+            </View>
+            <Text style={styles.serviceText}>Clear Filter</Text>
+          </TouchableOpacity>
+        }
       </View>
     );
   }
@@ -112,7 +128,8 @@ const styles = StyleSheet.create({
 });
 
 SearchContainer.propTypes = {
-  onServicePress: PropTypes.func.isRequired
+  onServicePress: PropTypes.func.isRequired,
+  servicesToDisplay: PropTypes.any
 }
 
 export default SearchContainer;
