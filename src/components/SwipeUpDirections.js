@@ -13,8 +13,8 @@ class SwipeUpDirections extends React.Component {
     super(props);
 
     this.state = {
-      showSearch: this.props.searchLocation === '' ? true : false,
-      searchLocation: this.props.searchLocation,
+      showSearch: this.props.fromLocation === '' ? true : false,
+      fromLocation: this.props.fromLocation,
       instructions: this.props.instructions,
       autoFocus: false
     }
@@ -25,18 +25,18 @@ class SwipeUpDirections extends React.Component {
       this.setState({ instructions: this.props.instructions });
     }
 
-    if (this.props.searchLocation != prevProps.searchLocation) {
-      this.setState({ searchLocation: this.props.searchLocation });
+    if (this.props.fromLocation != prevProps.fromLocation) {
+      this.setState({ fromLocation: this.props.fromLocation });
     }
   }
 
   renderHeader(isMini) {
-    const { searchLocation } = this.state;
+    const { fromLocation } = this.state;
     let closeButton, fromText = null;
 
     if (isMini) {
       closeButton = (
-        <TouchableOpacity onPress={() => this.props.hideDirections}>
+        <TouchableOpacity onPress={this.props.hideDirections}>
           <Ionicons style={{width: 32}} name="md-close-circle" size={32} color='#000'/>
         </TouchableOpacity>
       );
@@ -55,7 +55,7 @@ class SwipeUpDirections extends React.Component {
         <Text 
           style={[styles.clickableText, styles.body]}
           onPress={() => {this.setState({showSearch: true, autoFocus: true}); this.swipeUpDownRef.showFull()}}>
-            {searchLocation != '' ? searchLocation : 'Enter a location'}
+            {fromLocation != '' ? fromLocation : 'Enter a location'}
         </Text>
       );
     }
@@ -85,14 +85,14 @@ class SwipeUpDirections extends React.Component {
   }
 
   render() {
-    const { showSearch, searchLocation, autoFocus } = this.state;
+    const { showSearch, fromLocation, autoFocus } = this.state;
     return (
       <SwipeUpDown
         animation="easeInEaseOut"
         disablePressToShow={true}
         disableSwipeDown={true}
         hasRef={ref => (this.swipeUpDownRef = ref)}
-        onShowMini={() => searchLocation !== '' && this.setState({showSearch: false})}
+        onShowMini={() => fromLocation !== '' && this.setState({showSearch: false})}
         style={styles.swipeUpDirections}
         swipeHeight={WINDOW_HEIGHT/3}
         itemMini={
@@ -118,13 +118,13 @@ class SwipeUpDirections extends React.Component {
                 isRowScrollable={true}
                 disableScroll={false}
                 query={{ key: GOOGLE_MAPS_APIKEY, types: 'address' }}
-                getDefaultValue={() => searchLocation}
+                getDefaultValue={() => fromLocation}
                 styles={searchBarStyles}
-                renderRightButton={() => {if (searchLocation !== '') return <Text style={styles.clickableText} onPress={() => this.setState({showSearch: false})}>Cancel</Text>}}
+                renderRightButton={() => {if (fromLocation !== '') return <Text style={styles.clickableText} onPress={() => this.setState({showSearch: false})}>Cancel</Text>}}
                 textInputProps={{onFocus: () => this.setState({autoFocus: false})}}
                 onPress={(data, details = null) => {
                   this.setState({showSearch: false});
-                  this.props.setSearchLocation(details.formatted_address);
+                  this.props.setfromLocation(details.formatted_address);
                   this.props.setOrigin(details.geometry.location.lat, details.geometry.location.lng);
                   this.swipeUpDownRef.showMini();
                   this.props.centerMapOnRoute();
@@ -203,9 +203,9 @@ SwipeUpDirections.propTypes = {
   hideDirections: PropTypes.func.isRequired,
   instructions: PropTypes.array,
   isAnonymous: PropTypes.number.isRequired,
-  searchLocation: PropTypes.string.isRequired,
+  fromLocation: PropTypes.string.isRequired,
   setOrigin: PropTypes.func.isRequired,
-  setSearchLocation: PropTypes.func.isRequired
+  setfromLocation: PropTypes.func.isRequired
 }
 
 export default SwipeUpDirections;
