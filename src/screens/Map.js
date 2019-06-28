@@ -164,6 +164,7 @@ export default class MapScreen extends React.Component {
 
         <SwipeUpSearch 
           onServicePress={this.filterSites}
+          servicesToDisplay={this.state.servicesToDisplay}
         />
 
         { drawRoute &&
