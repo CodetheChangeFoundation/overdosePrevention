@@ -1,12 +1,24 @@
 import React from "react";
-import { Text, View, Modal, TouchableHighlight, Image } from "react-native";
-import { MapView } from "expo";
-import { SearchBar } from 'react-native-elements';
+import { View } from "react-native";
 import PropTypes from "prop-types";
+import { MapView } from "expo";
+import MapViewDirections from 'react-native-maps-directions';
 import SwipeUpSearch from '../components/SwipeUpSearch';
+import SwipeUpDirections from '../components/SwipeUpDirections';
 import MapPopup from "../components/MapPopup";
+import TravelModeBar from "../components/TravelModeBar";
 
-const deltas = {latitudeDelta: 0.0922, longitudeDelta: 0.0421}; // TODO: ??
+const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
+const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
+const MARKER_IMAGES = {
+  "Supervised Injection": require('../../assets/needle_marker.png'),
+  "Replacement": require('../../assets/replacement_marker.png'),
+  "Pipe": require('../../assets/pipe_marker.png'),
+  "Nurse": require('../../assets/nurse_marker.png'),
+  "Mobile Unit": require('../../assets/mobile_unit_marker.png'),
+  "Detox": require('../../assets/detox_marker.png'),
+  "Default": require('../../assets/default_marker.png')
+}
 
 export default class MapScreen extends React.Component {
 	static navigationOptions = {
@@ -15,36 +27,62 @@ export default class MapScreen extends React.Component {
 
 	constructor(props) {
     super(props);
-        
-    // TODO: not needed, shouldn't be San Fran initial region
-    let initialRegion = this.props.navigation.getParam('coordinates',
-      {
-        latitude: 37.78825,
-        longitude: -122.4324,
-      }
-    );
-    initialRegion = {...initialRegion, ...deltas}
+    const initialOrigin = this.props.navigation.getParam('coordinates');
 
 		this.state = {
-      region: initialRegion,
-      servicesToDisplay: undefined
+      region: {...initialOrigin, ...DELTAS},
+      servicesToDisplay: undefined,
+      modalVisible: false,
+      drawRoute: false,
+      travelMode: 'DRIVING',
+      instructions: undefined,
+      searchLocation: ''
     }
 
+    this.destination = undefined;
+    this.origin = undefined;
+    this.isAnonymous = this.props.navigation.getParam('isAnonymous');
+    this.currentRegion = {...initialOrigin, ...DELTAS};
     this.filterSites = this.filterSites.bind(this);
-	}
+    this.centerMapOnRoute = this.centerMapOnRoute.bind(this);
+    this.changeTravelMode = this.changeTravelMode.bind(this);
+    this.setOrigin = this.setOrigin.bind(this);
+    this.setSearchLocation = this.setSearchLocation.bind(this);
+  }
 
- filterSites(type) {
+  setOrigin(lat, lng) {
+    this.origin = {
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng)
+    };
+  }
+
+  changeTravelMode(mode) {
+    this.setState({
+      travelMode: mode
+    })
+  }
+
+  setSearchLocation(location) {
+    this.setState({
+      searchLocation: location
+    })
+  }
+
+  filterSites(type) {
     this.setState({
       servicesToDisplay: type
     });
   }
   
   renderSites() {
+    const { servicesToDisplay, drawRoute } = this.state;
     let sites = this.props.navigation.getParam('services');
 
-    if (this.state.servicesToDisplay !== undefined)
-    {
-      sites = sites.filter(site => this.state.servicesToDisplay === site.service);
+    if (drawRoute && this.destination !== undefined) {
+      sites = sites.filter(site => this.destination.lat === site.lat && this.destination.lon === site.lon);
+    } else if (servicesToDisplay !== undefined) {
+      sites = sites.filter(site => servicesToDisplay === site.service);
     }
 
     if (sites) {
@@ -56,93 +94,106 @@ export default class MapScreen extends React.Component {
               "latitude": parseFloat(site.lat),
               "longitude": parseFloat(site.lon)
             }}
-            title={site.name}
-            onPress={() => this.serviceClick(site, true)}
-            image={this.setMapMarker(site.service)}
-          >
-            <MapView.Callout>
-              <Text>
-                {this.createSiteDescription(site.hours, site.street, site.province, site.postal_code, site.phone_number)}
-              </Text>
-            </MapView.Callout>
-          </MapView.Marker>
+            onPress={() => { this.destination = site; this.setState({region: this.currentRegion, modalVisible: true}) }}
+            image={MARKER_IMAGES[site.service] ? MARKER_IMAGES[site.service] : MARKER_IMAGES["Default"]}
+          />
         );
       });
     }
   }
-
-  setMapMarker(serviceType) {
-    let marker;
-
-    switch (serviceType) {
-      case "Supervised Injection":
-        marker = require('../../assets/needle_marker.png');
-        break;
-      case "Replacement":
-        marker = require('../../assets/replacement_marker.png');
-        break;
-      case "Pipe":
-        marker = require('../../assets/pipe_marker.png');
-        break;
-      case "Nurse":
-        marker = require('../../assets/nurse_marker.png');
-        break;
-      case "Mobile Unit":
-        marker = require('../../assets/mobile_unit_marker.png');
-        break;
-      case "Detox":
-        marker = require('../../assets/detox_marker.png');
-        break;
-      default:
-        // TODO: need a default marker
-    }
-
-    return marker;
-  }
-
-    // TODO: create a modal and complete functions below
-  createSiteDescription(hours, street, province, postalCode, phoneNumber) {
-    // TODO: takes in a service's hours and address and formats it
-    return `${street}, ${postalCode} ${province}\n${this.formatPhoneNumber(phoneNumber)}${hours}`;
-  }
-
-  formatPhoneNumber(phoneNumber) {
-    // TODO: takes in a phone number and formats it
-    if (phoneNumber)
-    {
-      return `${phoneNumber}\n`;
-    }
-  }
   
+  centerMapOnRoute() {
+    this.setState({
+      modalVisible: false,
+      drawRoute: true
+    });
+
+    if (this.origin !== undefined && this.destination !== undefined) {
+      const destLat = parseFloat(this.destination.lat);
+      const destLon = parseFloat(this.destination.lon);
+      const latitudeDelta = destLat > this.origin.latitude ? destLat - this.origin.latitude : this.origin.latitude - destLat;
+      const longitudeDelta = destLon > this.origin.longitude ? destLon - this.origin.longitude : this.origin.longitude - destLon;
+      const multiplier = destLat > this.origin.latitude ? 0.4 : 1.6;
+
+      this.setState({
+        region: {
+          latitude: (multiplier * destLat + (2 - multiplier) * this.origin.latitude) / 2,
+          longitude: (destLon + this.origin.longitude) / 2,
+          latitudeDelta: latitudeDelta * 1.8,
+          longitudeDelta: longitudeDelta * 1.8
+        }
+      });
+    }
+  }
+
 	render() {
+    const { region, modalVisible, drawRoute, travelMode, instructions, searchLocation } = this.state;
+
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        {/* <SearchBar
-          round={true}
-          placeholder="Search for a place or address"
-          containerStyle={{backgroundColor: '#CCD2DD', height: 45}}
-          platform="default"
-          inputContainerStyle={{backgroundColor: '#CCD2DD'}}
-          inputStyle={{
-            backgroundColor: '#BABFC6', 
-            borderRadius: 7
-          }}
-          lightTheme={true}
-          searchIcon={null}
-          clearIcon={null}
-        /> */}
-        
         <MapView
           style={{ flex: 1 }}
           provider="google"
-          initialRegion={this.state.region}
+          region={region}
+          onRegionChangeComplete={(region) => this.currentRegion = region}
+          showsUserLocation={!this.isAnonymous ? true : false}
+          followsUserLocation={!this.isAnonymous ? true : false}
+          onUserLocationChange={!this.isAnonymous ? 
+            (params) => {
+              this.origin = { 
+                latitude: params.nativeEvent.coordinate.latitude,
+                longitude: params.nativeEvent.coordinate.longitude
+              };
+            } : undefined}
         >
           {this.renderSites()}
-        </MapView>		
-        
-        <SwipeUpSearch
+          { drawRoute && this.origin !== undefined && this.destination !== undefined &&
+            <MapViewDirections 
+              origin={this.origin} 
+              destination = {{ latitude: parseFloat(this.destination.lat), longitude: parseFloat(this.destination.lon) }}
+              mode={travelMode}
+              strokeWidth={3}
+              strokeColor="#4289DD"
+              apikey={GOOGLE_MAPS_APIKEY}
+              onReady={result => {
+                this.setState({instructions: result.instructions});
+              }}
+            />
+          }
+        </MapView>
+
+        <SwipeUpSearch 
           onServicePress={this.filterSites}
         />
+
+        { drawRoute &&
+          <SwipeUpDirections 
+            centerMapOnRoute={this.centerMapOnRoute}
+            destination={this.destination}
+            hideDirections={() => this.setState({ drawRoute: false })}
+            instructions={instructions}
+            isAnonymous={this.isAnonymous}
+            searchLocation={searchLocation}
+            setSearchLocation={this.setSearchLocation}
+            setOrigin={this.setOrigin}
+          />
+        }
+
+        { drawRoute && 
+          <TravelModeBar 
+            travelMode={travelMode} 
+            changeTravelMode={this.changeTravelMode}
+          />
+        }
+        
+        { modalVisible &&
+          <MapPopup 
+            centerMapOnRoute={this.centerMapOnRoute}
+            destination={this.destination} 
+            hideModal={() => this.setState({modalVisible: false})}
+          />
+        }
+
       </View>
     );
   }

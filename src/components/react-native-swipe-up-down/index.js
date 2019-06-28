@@ -27,13 +27,14 @@ type Props = {
   animation?: "linear" | "spring" | "easeInEaseOut" | "none"
 };
 export default class SwipeUpDown extends Component<Props> {
-  static defaultProps = {
+  static defautProps = {
     disablePressToShow: false
   };
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
+      disableSwipeDown: props.disableSwipeDown
     };
     this.disablePressToShow = props.disablePressToShow;
     this.SWIPE_HEIGHT = props.swipeHeight || 60;
@@ -131,7 +132,7 @@ export default class SwipeUpDown extends Component<Props> {
 
   showMini() {
     const { swipeHeight, onShowMini, itemMini } = this.props;
-    this.SWIPE_HEIGHT = (swipeHeight * 2) || 120; //Avoid hiding when swiping down.
+    this.SWIPE_HEIGHT = (swipeHeight +  60) || 120; //Avoid hiding when swiping down.
     this.customStyle.style.top = itemMini
       ? DEVICE_HEIGHT - this.SWIPE_HEIGHT
       : DEVICE_HEIGHT;
@@ -145,11 +146,12 @@ export default class SwipeUpDown extends Component<Props> {
 
   render() {
     const { itemMini, itemFull, style } = this.props;
-    const { collapsed } = this.state;
+    const { collapsed, disableSwipeDown } = this.state;
+    let gestures = (!this.checkCollapsed && !collapsed && disableSwipeDown) ? null : this._panResponder.panHandlers;
     return (
       <View
         ref={ref => (this.viewRef = ref)}
-        {...this._panResponder.panHandlers}
+        {...gestures}
         style={[
           styles.wrapSwipe,
           {

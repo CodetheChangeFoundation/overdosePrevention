@@ -61,7 +61,7 @@ class CityCarousel extends React.Component {
         gradientColors={color}
         horizontalGradient={false}
         rounded={true}
-        onPress={() => this.props.navigation.navigate('Map', {coordinates: coordinates, services: services})}
+        onPress={() => this.props.navigation.navigate('Map', {isAnonymous: 1, coordinates: coordinates, services: services})}
       />
     );
   }
