@@ -115,7 +115,7 @@ class SwipeUpDirections extends React.Component {
                 autoFocus={autoFocus}
                 returnKeyType={'default'}
                 fetchDetails={true}
-                isRowScrollable={true}
+                isRowScrollable={false}
                 disableScroll={false}
                 query={{ key: GOOGLE_MAPS_APIKEY, types: 'address' }}
                 getDefaultValue={() => fromLocation}
