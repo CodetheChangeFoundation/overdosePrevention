@@ -7,6 +7,7 @@ import SwipeUpSearch from '../components/SwipeUpSearch';
 import SwipeUpDirections from '../components/SwipeUpDirections';
 import MapPopup from "../components/MapPopup";
 import TravelModeBar from "../components/TravelModeBar";
+import SiteSearch from "../components/SiteSearch";
 
 const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
@@ -36,7 +37,7 @@ export default class MapScreen extends React.Component {
       drawRoute: false,
       travelMode: 'DRIVING',
       instructions: undefined,
-      searchLocation: ''
+      fromLocation: ''
     }
 
     this.destination = undefined;
@@ -47,7 +48,8 @@ export default class MapScreen extends React.Component {
     this.centerMapOnRoute = this.centerMapOnRoute.bind(this);
     this.changeTravelMode = this.changeTravelMode.bind(this);
     this.setOrigin = this.setOrigin.bind(this);
-    this.setSearchLocation = this.setSearchLocation.bind(this);
+    this.setDestination = this.setDestination.bind(this);
+    this.setfromLocation = this.setfromLocation.bind(this);
   }
 
   setOrigin(lat, lng) {
@@ -57,20 +59,25 @@ export default class MapScreen extends React.Component {
     };
   }
 
+  setDestination(site) {
+    this.destination = site;
+  }
+
   changeTravelMode(mode) {
     this.setState({
       travelMode: mode
     })
   }
 
-  setSearchLocation(location) {
+  setfromLocation(location) {
     this.setState({
-      searchLocation: location
+      fromLocation: location
     })
   }
 
   filterSites(type) {
     this.setState({
+      region: this.currentRegion,
       servicesToDisplay: type
     });
   }
@@ -127,7 +134,7 @@ export default class MapScreen extends React.Component {
   }
 
 	render() {
-    const { region, modalVisible, drawRoute, travelMode, instructions, searchLocation } = this.state;
+    const { region, modalVisible, drawRoute, travelMode, instructions, fromLocation } = this.state;
 
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -162,6 +169,14 @@ export default class MapScreen extends React.Component {
           }
         </MapView>
 
+        {!drawRoute &&
+          <SiteSearch
+            sites={this.props.navigation.getParam('services')}
+            setDestination={this.setDestination}
+            setRegionAndModal={() => this.setState({region: this.currentRegion, modalVisible: true})}
+          />
+        }
+
         <SwipeUpSearch 
           onServicePress={this.filterSites}
           servicesToDisplay={this.state.servicesToDisplay}
@@ -174,8 +189,8 @@ export default class MapScreen extends React.Component {
             hideDirections={() => this.setState({ drawRoute: false })}
             instructions={instructions}
             isAnonymous={this.isAnonymous}
-            searchLocation={searchLocation}
-            setSearchLocation={this.setSearchLocation}
+            fromLocation={fromLocation}
+            setfromLocation={this.setfromLocation}
             setOrigin={this.setOrigin}
           />
         }
