@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text, Image, Dimensions, Picker } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, Picker, Linking } from "react-native";
 import { Location, Permissions } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
@@ -126,11 +126,20 @@ export default class ChooseCityScreen extends React.Component {
 
   renderDisclaimer() {
     return (
-      <Text style={styles.disclaimer}>
-        No information will be tracked or saved.
-      </Text>
+      <View>
+        <Text style={styles.disclaimer}>
+          No information will be tracked or saved.
+        </Text>
+        <Text style={styles.ctc}>
+          Developed by <Text style={styles.clickableText} onPress={() => this.handleWebsiteLinkPress('http://codethechange.ca')}>Code the Change Foundation</Text>.
+        </Text>
+      </View>
     )
   }
+
+  handleWebsiteLinkPress(link) {
+    Linking.openURL(link);
+  };
 
   render() {
     const { isAnonymous, fetchStatus, cities, sites } = this.state;
@@ -221,7 +230,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   carouselContainer: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
@@ -235,9 +243,18 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   disclaimer: {
-    marginBottom: 15,
+    marginBottom: 5,
     fontWeight: '200',
     textAlign: 'center'
+  },
+  ctc: {
+    marginBottom: 15,
+    fontWeight: '200',
+    textAlign: 'center',
+    fontSize: 12
+  },
+  clickableText: {
+    color: '#4289DD'
   }
 });
 
