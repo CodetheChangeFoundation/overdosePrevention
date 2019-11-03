@@ -33,16 +33,18 @@ export default class ChooseCityScreen extends React.Component {
     const siteUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/site";
     
     fetch(cityUrl)
-      .then(response => {
+      .then(response => response.json())
+      .then(responseJSON => {
         self.setState({
-          cities: JSON.parse(response._bodyInit)
+          cities: responseJSON
         });
       })
       .then(() => {
         fetch(siteUrl)
-          .then(response => {
+          .then(response => response.json())
+          .then(responseJSON => {
             self.setState({
-              sites: JSON.parse(response._bodyInit),
+              sites: responseJSON,
               fetchStatus: "Success"
             });
           })

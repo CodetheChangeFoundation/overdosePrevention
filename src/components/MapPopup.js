@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, Text, View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
-import { LinearGradient } from 'expo';
+import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveButton from "../components/ResponsiveButton";
 
