@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 15,
     paddingHorizontal: 50,
-    borderRadius: 100
+    borderRadius: 25
   },
   title: {
     fontSize: 20

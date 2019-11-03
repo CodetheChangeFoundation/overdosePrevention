@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import PropTypes from "prop-types";
-import { MapView } from "expo";
+import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import SwipeUpSearch from '../components/SwipeUpSearch';
 import SwipeUpDirections from '../components/SwipeUpDirections';
