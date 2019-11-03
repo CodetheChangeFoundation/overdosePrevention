@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import * as Svg from 'react-native-svg';
+import { Svg, Path } from "react-native-svg";
 import { View } from "react-native";
-
-const { Path } = Svg;
 
 class DetoxLogo extends React.Component {
 	render() {

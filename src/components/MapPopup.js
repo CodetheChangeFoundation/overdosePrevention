@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingVertical: 3,
     paddingHorizontal: 10,
-    borderRadius: 28
+    borderRadius: 10
   },
   directionsButtonContainer: {
     marginTop: -25
