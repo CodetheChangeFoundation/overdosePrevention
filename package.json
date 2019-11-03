@@ -8,15 +8,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "expo": "^32.0.0",
+    "expo": "^33.0.0",
+    "expo-linear-gradient": "~5.0.1",
     "jest": "^24.7.1",
     "prop-types": "^15.7.2",
-    "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-native-google-places-autocomplete": "^1.3.9",
     "react-native-maps-directions": "https://github.com/CodetheChangeFoundation/react-native-maps-directions/tarball/master",
     "react-native-snap-carousel": "^3.8.0",
+    "react-native-svg": "~9.4.0",
     "react-native-toaster": "^1.2.2",
     "react-navigation": "^3.8.1"
   },

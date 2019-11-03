@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text } from "react-native";
-import { LinearGradient } from 'expo';
+import { LinearGradient } from "expo-linear-gradient";
 import PropTypes from "prop-types";
 
 /* Responsive Button is a wrapper around a TouchableOpacity button with a linear gradient */
