@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet, Text, Image, Dimensions, Picker, Linking } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, Image, Dimensions, Picker, Linking } from "react-native";
 import { Location, Permissions } from 'expo';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
@@ -148,59 +148,67 @@ export default class ChooseCityScreen extends React.Component {
     if (isAnonymous) {
       if (fetchStatus === "Success") {
         return (
-          <View style={styles.containerStyle}>
-            {this.renderLogoAndPicker()}
-            <View style={styles.carouselContainer}>
-              <Text style={styles.textStyle}>Select City</Text>
-              <CityCarousel cities={cities} sites={sites} navigation={this.props.navigation}/>
+          <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.containerStyle}>
+              {this.renderLogoAndPicker()}
+              <View style={styles.carouselContainer}>
+                <Text style={styles.textStyle}>Select City</Text>
+                <CityCarousel cities={cities} sites={sites} navigation={this.props.navigation}/>
+              </View>
+              {this.renderDisclaimer()}
             </View>
-            {this.renderDisclaimer()}
-          </View>
+          </SafeAreaView>
         );
       } else if (fetchStatus === "Failure") {
         return (
-          <View style={styles.containerStyle}>
-            {this.renderLogoAndPicker()}
-            <View style={styles.carouselContainer}>
-              <Text style={styles.disclaimer}>An error occurred while retrieving the data. Please try again.</Text>
-              <ResponsiveButton
-                onPress={() => {this.setState({fetchStatus: 'Loading'}); this.componentDidMount()}}
-                horizontalGradient={true}
-                labelStyle={{ fontWeight: "600" }}
-                style={styles.tryAgainButton}
-                gradientColors={["#F3CB14", "#E58B37"]}
-                label="Try Again"
-              />
+          <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.containerStyle}>
+              {this.renderLogoAndPicker()}
+              <View style={styles.carouselContainer}>
+                <Text style={styles.disclaimer}>An error occurred while retrieving the data. Please try again.</Text>
+                <ResponsiveButton
+                  onPress={() => {this.setState({fetchStatus: 'Loading'}); this.componentDidMount()}}
+                  horizontalGradient={true}
+                  labelStyle={{ fontWeight: "600" }}
+                  style={styles.tryAgainButton}
+                  gradientColors={["#F3CB14", "#E58B37"]}
+                  label="Try Again"
+                />
+              </View>
+              {this.renderDisclaimer()}
             </View>
-            {this.renderDisclaimer()}
-          </View>
+          </SafeAreaView>
         );
       } else {
         return (
-          <View style={styles.containerStyle}>
-            {this.renderLogoAndPicker()}
-            <View style={styles.carouselContainer}>
-              <Image style={{width: 60, height: 60}} source={require('../../assets/loading_spinner.gif')} />
-              <Text style={styles.disclaimer}>Loading</Text>
+          <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.containerStyle}>
+              {this.renderLogoAndPicker()}
+              <View style={styles.carouselContainer}>
+                <Image style={{width: 60, height: 60}} source={require('../../assets/loading_spinner.gif')} />
+                <Text style={styles.disclaimer}>Loading</Text>
+              </View>
+              {this.renderDisclaimer()}
             </View>
-            {this.renderDisclaimer()}
-          </View>
+          </SafeAreaView>
         );
       }
     } else {
       return (
-        <View style={styles.containerStyle}>
-          {this.renderLogoAndPicker()}
-          <ResponsiveButton
-            onPress={this.enableLocationServices}
-            horizontalGradient={true}
-            labelStyle={{ fontWeight: "600" }}
-            style={styles.continueButton}
-            gradientColors={["#F3CB14", "#E58B37"]}
-            label="Continue"
-          />
-          {this.renderDisclaimer()}
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.containerStyle}>
+            {this.renderLogoAndPicker()}
+            <ResponsiveButton
+              onPress={this.enableLocationServices}
+              horizontalGradient={true}
+              labelStyle={{ fontWeight: "600" }}
+              style={styles.continueButton}
+              gradientColors={["#F3CB14", "#E58B37"]}
+              label="Continue"
+            />
+            {this.renderDisclaimer()}
+          </View>
+        </SafeAreaView>
       );
     }
   }

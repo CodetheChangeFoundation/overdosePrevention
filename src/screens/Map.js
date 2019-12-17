@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import PropTypes from "prop-types";
 import { MapView } from "expo";
 import MapViewDirections from 'react-native-maps-directions';
@@ -137,6 +137,7 @@ export default class MapScreen extends React.Component {
     const { region, modalVisible, drawRoute, travelMode, instructions, fromLocation } = this.state;
 
     return (
+      <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <MapView
           style={{ flex: 1 }}
@@ -211,6 +212,7 @@ export default class MapScreen extends React.Component {
         }
 
       </View>
+      </SafeAreaView>
     );
   }
 }

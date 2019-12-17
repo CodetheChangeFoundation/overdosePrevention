@@ -123,12 +123,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     textAlignVertical: 'center',
-    marginBottom: 20
+    marginBottom: 25,
+    paddingTop: 20
   }
 });
 
 SearchContainer.propTypes = {
   onServicePress: PropTypes.func.isRequired,
+  onFilterPress: PropTypes.func,
   servicesToDisplay: PropTypes.any
 }
 
