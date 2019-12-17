@@ -29,8 +29,8 @@ export default class ChooseCityScreen extends React.Component {
 
   componentDidMount() {
     let self = this;
-    const cityUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/city";
-    const siteUrl = "https://8zt1ebdsoj.execute-api.ca-central-1.amazonaws.com/prod/site";
+    const cityUrl = "https://tm4j6jd16k.execute-api.ca-central-1.amazonaws.com/prod/city";
+    const siteUrl = "https://tm4j6jd16k.execute-api.ca-central-1.amazonaws.com/prod/site";
     
     fetch(cityUrl)
       .then(response => response.json())
