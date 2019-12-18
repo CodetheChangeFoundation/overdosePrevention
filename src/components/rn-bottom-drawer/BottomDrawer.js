@@ -124,6 +124,24 @@ export default class BottomDrawer extends Component {
     })
   }
 
+  setCurrentPosition(position) {
+    this.setState({ currentPosition: position })
+  }
+
+  _calculateUpPosition(screenHeight, containerHeight, offset) {
+    return {
+      x: 0,
+      y: screenHeight - (containerHeight + offset)
+    }
+  }
+
+  _calculateDownPosition(upPosition, downDisplay) {
+    return {
+      x: 0,
+      y: upPosition.y + downDisplay
+    };
+  }
+
   render() {
     return (
       <Animator
@@ -146,23 +164,5 @@ export default class BottomDrawer extends Component {
         <View style={{ height: Math.sqrt(SCREEN_HEIGHT), backgroundColor: this.props.backgroundColor }} />
       </Animator>
     )
-  }
-
-  setCurrentPosition(position) {
-    this.setState({ currentPosition: position })
-  }
-
-  _calculateUpPosition(screenHeight, containerHeight, offset) {
-    return {
-      x: 0,
-      y: screenHeight - (containerHeight + offset)
-    }
-  }
-
-  _calculateDownPosition(upPosition, downDisplay) {
-    return {
-      x: 0,
-      y: upPosition.y + downDisplay
-    };
   }
 }

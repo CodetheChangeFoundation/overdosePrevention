@@ -24,33 +24,15 @@ export default class Animator extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.drawerState !== this.props.drawerState) {
-      if (nextProps.drawerState === 0) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.drawerState !== this.props.drawerState) {
+      if (this.props.drawerState === 0) {
         this._transitionTo(this.props.downPosition, this.props.onCollapsed);
       }
-      if (nextProps.drawerState === 1) {
+      if (this.props.drawerState === 1) {
         this._transitionTo(this.props.upPosition, this.props.onExpanded);
       }
     }
-  }
-
-  render() {
-    return (
-      <Animated.View
-        style={[
-          { ...this.position.getLayout(), left: 0 },
-          StyleSheet.flatten([
-            styles.animationContainer(this.props.containerHeight, this.props.backgroundColor),
-            styles.roundedEdges(this.props.roundedEdges),
-            styles.shadow(this.props.shadow)
-          ])
-        ]}
-        {...this._panResponder.panHandlers}
-      >
-        {this.props.children}
-      </Animated.View>
-    )
   }
 
   _handlePanResponderMove = (e, gesture) => {
@@ -95,6 +77,24 @@ export default class Animator extends Component {
     Animated.spring(this.position, {
       toValue: this.props.currentPosition
     }).start();
+  }
+
+  render() {
+    return (
+      <Animated.View
+        style={[
+          { ...this.position.getLayout(), left: 0 },
+          StyleSheet.flatten([
+            styles.animationContainer(this.props.containerHeight, this.props.backgroundColor),
+            styles.roundedEdges(this.props.roundedEdges),
+            styles.shadow(this.props.shadow)
+          ])
+        ]}
+        {...this._panResponder.panHandlers}
+      >
+        {this.props.children}
+      </Animated.View>
+    )
   }
 }
 
