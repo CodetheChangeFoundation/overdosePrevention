@@ -1,10 +1,10 @@
 import React from "react";
 import { SafeAreaView, View } from "react-native";
 import PropTypes from "prop-types";
-import { MapView } from "expo";
-import MapViewDirections from 'react-native-maps-directions';
-import SwipeUpSearch from '../components/SwipeUpSearch';
-import SwipeUpDirections from '../components/SwipeUpDirections';
+import MapView from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
+import SwipeUpSearch from "../components/SwipeUpSearch";
+import SwipeUpDirections from "../components/SwipeUpDirections";
 import MapPopup from "../components/MapPopup";
 import TravelModeBar from "../components/TravelModeBar";
 import SiteSearch from "../components/SiteSearch";

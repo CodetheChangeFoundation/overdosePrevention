@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Svg } from "expo";
+import { Svg, Path } from "react-native-svg";
 import { View } from "react-native";
-
-const { Path } = Svg;
 
 class MobileUnitLogo extends React.Component {
 	render() {

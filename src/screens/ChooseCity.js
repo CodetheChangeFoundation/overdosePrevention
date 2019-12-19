@@ -133,7 +133,7 @@ export default class ChooseCityScreen extends React.Component {
           No information will be tracked or saved.
         </Text>
         <Text style={styles.ctc}>
-          Developed by <Text style={styles.clickableText} onPress={() => this.handleWebsiteLinkPress('http://codethechange.ca')}>Code the Change Foundation</Text>.
+          Developed by the <Text style={styles.clickableText} onPress={() => this.handleWebsiteLinkPress('http://codethechange.ca')}>Code the Change Foundation</Text>.
         </Text>
       </View>
     )

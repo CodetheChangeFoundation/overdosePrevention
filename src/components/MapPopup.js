@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingVertical: 3,
     paddingHorizontal: 10,
-    borderRadius: 28
+    borderRadius: 10
   },
   directionsButtonContainer: {
     marginTop: -25
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: 15,
     paddingHorizontal: 50,
-    borderRadius: 100
+    borderRadius: 25
   },
   title: {
     fontSize: 20
