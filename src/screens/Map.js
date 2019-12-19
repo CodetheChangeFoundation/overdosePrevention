@@ -8,9 +8,9 @@ import SwipeUpDirections from "../components/SwipeUpDirections";
 import MapPopup from "../components/MapPopup";
 import TravelModeBar from "../components/TravelModeBar";
 import SiteSearch from "../components/SiteSearch";
+import GOOGLE_MAPS_APIKEY from '../components/GoogleMapsAPIKey';
 
 const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
-const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
 const MARKER_IMAGES = {
   "Supervised Injection": require('../../assets/needle_marker.png'),
   "Replacement": require('../../assets/replacement_marker.png'),

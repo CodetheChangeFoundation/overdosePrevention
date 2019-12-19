@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import SwipeUpDown from './react-native-swipe-up-down/index';
 import { Ionicons } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import GOOGLE_MAPS_APIKEY from './GoogleMapsAPIKey';
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
-const GOOGLE_MAPS_APIKEY = 'AIzaSyBO8JtI4QwXlt2khUX66l71yAi2hEKCsPo';
 
 class SwipeUpDirections extends React.Component {
   constructor(props) {
@@ -141,6 +141,7 @@ class SwipeUpDirections extends React.Component {
                 style={styles.instructions}
               >
                 {this.renderInstructions()}
+                <View style={{height: 200}}/>
               </ScrollView>
             : null}
 
@@ -175,8 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   instructions: {
-    paddingVertical: 5,
-    marginBottom: 100
+    paddingVertical: 5
   }
 });
 

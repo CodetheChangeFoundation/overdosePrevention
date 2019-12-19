@@ -1,0 +1,1 @@
+export default GOOGLE_MAPS_APIKEY = 'INSERT_API_KEY_HERE';
