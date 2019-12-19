@@ -225,11 +225,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   continueButton: {
+    justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    padding: 15,
     width: windowWidth * 0.8,
-    borderRadius: 30,
+    borderRadius: 25,
+    height: 50,
     marginTop: windowHeight * 0.05,
   },
   tryAgainButton: {

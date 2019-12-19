@@ -133,9 +133,11 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end"
   },
   closeButton: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    borderRadius: 10
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center"
   },
   directionsButtonContainer: {
     marginTop: -25
