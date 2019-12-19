@@ -1,50 +1,37 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import PropTypes from "prop-types";
-import SwipeUpDown from './react-native-swipe-up-down/index';
 import SearchContainer from './SearchContainer';
+import BottomDrawer from './rn-bottom-drawer/BottomDrawer';
 
-/*
-* SwipeUpSearch is the component for the swipe up search bar at the bottom of the map screen
-*/
+const WINDOW_HEIGHT = Dimensions.get("window").height;
+
 class SwipeUpSearch extends React.Component {
   constructor(props) {
     super(props);
     this.onServiceButtonClick = this.onServiceButtonClick.bind(this);
   }
 
-  /*
-  * Collapses the swipe up down view when a service button is clicked
-  * @param {Object} coordinates - latitude and longitude of the service
-  */
   onServiceButtonClick(type) {
-    this.swipeUpDownRef.showMini();
+    this.drawer.closeBottomDrawer();
     this.props.onServicePress(type);
   }
 
   render() {
     return (
-      <SwipeUpDown
-        animation="easeInEaseOut"
-        disablePressToShow={false}
-        hasRef={ref => (this.swipeUpDownRef = ref)}
-        itemMini={
-          <SearchContainer onServicePress={this.onServiceButtonClick} servicesToDisplay={this.props.servicesToDisplay} />
-        }
-        itemFull={
-          <SearchContainer onServicePress={this.onServiceButtonClick} servicesToDisplay={this.props.servicesToDisplay} />
-        }
-        style={styles.swipeUpSearch}
-      />
+      <BottomDrawer
+        containerHeight={WINDOW_HEIGHT-100}
+        downDisplay={WINDOW_HEIGHT-220}
+        startUp={false}
+        shadow={false}
+        offset={34}
+        ref={ref => this.drawer = ref}
+      >
+        <SearchContainer onServicePress={this.onServiceButtonClick} servicesToDisplay={this.props.servicesToDisplay} />
+      </BottomDrawer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  swipeUpSearch: {
-    backgroundColor: '#FFF'
-  }
-});
 
 SwipeUpSearch.propTypes = {
   onServicePress: PropTypes.func.isRequired,

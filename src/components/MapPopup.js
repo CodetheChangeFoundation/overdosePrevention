@@ -43,6 +43,18 @@ class MapPopup extends React.Component {
     const { name, service, street, province, country, postal_code, phone_number, hours } = this.props.destination;
     return (
       <View style={styles.modalContainer}>
+        <View style={styles.closeButtonContainer}>
+          <TouchableOpacity onPress={this.props.hideModal}>
+            <LinearGradient
+              colors={['#F3CB14', '#E58B37']}
+              style={styles.closeButton}
+              start={[0,0]}
+              end={[1,0]}
+            >
+              <Ionicons name="md-close" size={28} color='#FFF'/>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
         <View style={styles.modal}>
           <ScrollView 
             alwaysBounceVertical={true}
@@ -75,18 +87,6 @@ class MapPopup extends React.Component {
             
           </ScrollView>
         </View>
-        <View style={styles.closeButtonContainer}>
-          <TouchableOpacity onPress={this.props.hideModal}>
-            <LinearGradient
-              colors={['#F3CB14', '#E58B37']}
-              style={styles.closeButton}
-              start={[0,0]}
-              end={[1,0]}
-            >
-              <Ionicons name="md-close" size={28} color='#FFF'/>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
         <View style={styles.directionsButtonContainer}>
           <ResponsiveButton
             key='directions'
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     position: 'absolute',
     top: 0,
-    bottom: 0,
+    bottom: -34,
     left: 0,
     right: 0,
     paddingBottom: 60,
@@ -127,14 +127,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   closeButtonContainer: {
-    position: 'absolute',
-    bottom: (WINDOW_HEIGHT * 5 / 6) - 15,
-    right: (WINDOW_WIDTH * 0.1) - 15,
+    marginRight: (WINDOW_WIDTH * 0.1) - 15,
+    marginBottom: -20,
+    zIndex: 999,
+    alignSelf: "flex-end"
   },
   closeButton: {
-    paddingVertical: 3,
-    paddingHorizontal: 10,
-    borderRadius: 10
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center"
   },
   directionsButtonContainer: {
     marginTop: -25
