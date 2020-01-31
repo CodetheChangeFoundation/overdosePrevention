@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { SafeAreaView, View, StyleSheet, Text, Image, Dimensions, Picker, Linking } from "react-native";
-import { Location, Permissions } from 'expo';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
 import OpsLogo from "../components/logos/OpsLogo";
@@ -148,7 +149,7 @@ export default class ChooseCityScreen extends React.Component {
     if (isAnonymous) {
       if (fetchStatus === "Success") {
         return (
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style={styles.containerStyle}>
               {this.renderLogoAndPicker()}
               <View style={styles.carouselContainer}>
@@ -161,7 +162,7 @@ export default class ChooseCityScreen extends React.Component {
         );
       } else if (fetchStatus === "Failure") {
         return (
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style={styles.containerStyle}>
               {this.renderLogoAndPicker()}
               <View style={styles.carouselContainer}>
@@ -181,7 +182,7 @@ export default class ChooseCityScreen extends React.Component {
         );
       } else {
         return (
-          <SafeAreaView style={{ flex: 1 }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <View style={styles.containerStyle}>
               {this.renderLogoAndPicker()}
               <View style={styles.carouselContainer}>
@@ -195,7 +196,7 @@ export default class ChooseCityScreen extends React.Component {
       }
     } else {
       return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
           <View style={styles.containerStyle}>
             {this.renderLogoAndPicker()}
             <ResponsiveButton
