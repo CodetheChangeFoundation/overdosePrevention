@@ -5,9 +5,9 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Toaster from 'react-native-toaster';
 import ResponsiveButton from '../components/ResponsiveButton';
-import OpsLogo from "../components/logos/OpsLogo";
-import CityCarousel from "../components/CityCarousel";
+import CityCarousel from '../components/CityCarousel';
 
+const logo = require('../../assets/splash.png');
 const windowWidth =  Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -115,9 +115,10 @@ export default class ChooseCityScreen extends React.Component {
       <View>
         {this.renderToaster()}
         <View style={styles.opsLogoStyle}>
-          <OpsLogo />
+          <Image style={{width: 250, height: 250}} source={logo} />
         </View>
-        <Picker 
+        <Picker
+          style={{marginTop: -16, marginBottom: -16}}
           selectedValue={isAnonymous} 
           onValueChange={itemValue => this.setState({ isAnonymous: itemValue }) }>
           <Picker.Item label="Stay anonymous" value={1} />
@@ -172,7 +173,7 @@ export default class ChooseCityScreen extends React.Component {
                   horizontalGradient={true}
                   labelStyle={{ fontWeight: "600" }}
                   style={styles.tryAgainButton}
-                  gradientColors={["#F3CB14", "#E58B37"]}
+                  gradientColors={["#C4C4C4", "#C4C4C4"]}
                   label="Try Again"
                 />
               </View>
@@ -204,7 +205,7 @@ export default class ChooseCityScreen extends React.Component {
               horizontalGradient={true}
               labelStyle={{ fontWeight: "600" }}
               style={styles.continueButton}
-              gradientColors={["#F3CB14", "#E58B37"]}
+              gradientColors={["#8E8E8E", "#8E8E8E"]}
               label="Continue"
             />
             {this.renderDisclaimer()}
@@ -222,7 +223,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   opsLogoStyle: {
-    marginTop: 35,
     alignSelf: 'center'
   },
   continueButton: {

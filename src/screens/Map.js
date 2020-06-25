@@ -12,13 +12,13 @@ import GOOGLE_MAPS_APIKEY from '../components/GoogleMapsAPIKey';
 
 const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
 const MARKER_IMAGES = {
-  "Supervised Injection": require('../../assets/needle_marker.png'),
-  "Replacement": require('../../assets/replacement_marker.png'),
-  "Pipe": require('../../assets/pipe_marker.png'),
-  "Nurse": require('../../assets/nurse_marker.png'),
-  "Mobile Unit": require('../../assets/mobile_unit_marker.png'),
-  "Detox": require('../../assets/detox_marker.png'),
-  "Default": require('../../assets/default_marker.png')
+  "Supervised Injection": require('../../assets/markers/needle_marker.png'),
+  "Replacement": require('../../assets/markers/replacement_marker.png'),
+  "Pipe": require('../../assets/markers/pipe_marker.png'),
+  "Nurse": require('../../assets/markers/nurse_marker.png'),
+  "Mobile Unit": require('../../assets/markers/mobile_unit_marker.png'),
+  "Detox": require('../../assets/markers/detox_marker.png'),
+  "Default": require('../../assets/markers/default_marker.png')
 }
 
 export default class MapScreen extends React.Component {

@@ -21,32 +21,32 @@ const serviceTypes = [
 // A map of each service type and the corresponding logo and style to use
 const logosToUse = {
   "Supervised Injection": {
-    viewStyle: {backgroundColor: '#C237E5'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <NeedleLogo/>
   },
   "Pipe": {
-    viewStyle: {backgroundColor: '#E58B37'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <PipeLogo/>
   },
   "Nurse": {
-    viewStyle: {backgroundColor: '#DD4271'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <NurseLogo/>
   },
   "Replacement": {
-    viewStyle: {backgroundColor: '#E53737'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <ReplacementLogo/>
   },
   "Detox": {
-    viewStyle: {backgroundColor: '#4289DD'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <DetoxLogo/>
   },
   "Mobile Unit": {
-    viewStyle: {backgroundColor: '#74DD42'},
+    viewStyle: {backgroundColor: 'black'},
     logo: <MobileUnitLogo/>
   },
   "Clear Filter": {
-    viewStyle: {backgroundColor: '#D0D0D0'},
-    logo: <View style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}><Ionicons name="md-close" size={50} color="#000" /></View>
+    viewStyle: {backgroundColor: 'black'},
+    logo: <View style={{height: 50, width: 50, justifyContent: 'center', alignItems: 'center'}}><Ionicons name="md-close" size={50} color="#C45146" /></View>
   }
 };
 

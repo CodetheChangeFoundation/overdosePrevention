@@ -23,7 +23,7 @@ class TravelModeBar extends React.Component {
     const { travelMode } = this.state;
     return (
       <TouchableOpacity onPress={() => this.props.changeTravelMode(mode)}>
-        <Ionicons name={icon} size={32} color={travelMode === mode ? '#E58B37' : '#BDB8B3'}/>
+        <Ionicons name={icon} size={32} color={travelMode === mode ? '#C45146' : '#BDB8B3'}/>
       </TouchableOpacity>
     );
   }

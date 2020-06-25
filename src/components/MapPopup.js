@@ -46,7 +46,7 @@ class MapPopup extends React.Component {
         <View style={styles.closeButtonContainer}>
           <TouchableOpacity onPress={this.props.hideModal}>
             <LinearGradient
-              colors={['#F3CB14', '#E58B37']}
+              colors={['#C45146', '#C45146']}
               style={styles.closeButton}
               start={[0,0]}
               end={[1,0]}
@@ -93,7 +93,7 @@ class MapPopup extends React.Component {
             label='Directions'
             labelStyle={{fontWeight: '600'}}
             style={styles.directionsButton}
-            gradientColors={['#F3CB14', '#E58B37']}
+            gradientColors={['#C45146', '#C45146']}
             horizontalGradient={true}
             onPress={() => this.props.centerMapOnRoute()}
           />
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 20,
     borderWidth: 3,
-    borderColor: '#E58B37',
+    borderColor: 'black',
     justifyContent: 'space-between'
   },
   closeButtonContainer: {

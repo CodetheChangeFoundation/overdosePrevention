@@ -5,11 +5,18 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import ResponsiveButton from './ResponsiveButton';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
-const colours = [
+const colours_old = [
   ['rgba(55, 208, 229, 0.9)', 'rgba(66, 137, 221, 0.9)'],
   ['rgba(194, 55, 229, 0.9)', 'rgba(209, 66, 221, 0.9)'],
   ['rgba(229, 55, 55, 0.9)', 'rgba(221, 66, 150, 0.9)'],
   ['rgba(55, 229, 93, 0.9)', 'rgba(66, 221, 175, 0.9)']
+];
+
+const colours = [
+  ['#C4C4C4', '#C4C4C4'],
+  ['#C4C4C4', '#C4C4C4'],
+  ['#C4C4C4', '#C4C4C4'],
+  ['#C4C4C4', '#C4C4C4'],
 ];
 
 class CityCarousel extends React.Component {
