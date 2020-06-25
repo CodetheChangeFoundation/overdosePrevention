@@ -52,7 +52,7 @@ export default class SwipeUpDown extends Component<Props> {
     this.showFull = this.showFull.bind(this);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this._panResponder = PanResponder.create({
       onMoveShouldSetPanResponder: (event, gestureState) => true,
       onPanResponderMove: this._onPanResponderMove.bind(this),
