@@ -35,6 +35,7 @@ export default class MapScreen extends React.Component {
       servicesToDisplay: undefined,
       modalVisible: false,
       drawRoute: false,
+      duration: undefined,
       travelMode: 'DRIVING',
       instructions: undefined,
       fromLocation: ''
@@ -134,7 +135,7 @@ export default class MapScreen extends React.Component {
   }
 
 	render() {
-    const { region, modalVisible, drawRoute, travelMode, instructions, fromLocation } = this.state;
+    const { region, modalVisible, duration, drawRoute, travelMode, instructions, fromLocation } = this.state;
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -164,7 +165,10 @@ export default class MapScreen extends React.Component {
               strokeColor="#4289DD"
               apikey={GOOGLE_MAPS_APIKEY}
               onReady={result => {
-                this.setState({instructions: result.instructions});
+                this.setState({
+                  duration: result.duration,
+                  instructions: result.instructions
+                });
               }}
             />
           }
@@ -189,10 +193,12 @@ export default class MapScreen extends React.Component {
             destination={this.destination}
             hideDirections={() => this.setState({ drawRoute: false })}
             instructions={instructions}
+            duration={duration}
             isAnonymous={this.isAnonymous}
             fromLocation={fromLocation}
             setfromLocation={this.setfromLocation}
             setOrigin={this.setOrigin}
+            travelMode={travelMode}
           />
         }
 

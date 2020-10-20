@@ -1,10 +1,11 @@
 import React from "react";
-import { Dimensions, View, ScrollView, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Alert, Dimensions, View, ScrollView, Text, StyleSheet, TouchableOpacity, Linking } from "react-native";
 import PropTypes from "prop-types";
 import SwipeUpDown from './react-native-swipe-up-down/index';
 import { Ionicons } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import GOOGLE_MAPS_APIKEY from './GoogleMapsAPIKey';
+import ResponsiveButton from './ResponsiveButton';
 
 const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
 
@@ -55,7 +56,7 @@ class SwipeUpDirections extends React.Component {
         <Text 
           style={[styles.clickableText, styles.body]}
           onPress={() => {this.setState({showSearch: true, autoFocus: true}); this.swipeUpDownRef.showFull()}}>
-            {fromLocation != '' ? fromLocation : 'Enter a location'}
+            {fromLocation !== '' ? fromLocation : 'Enter a location'}
         </Text>
       );
     }
@@ -67,6 +68,31 @@ class SwipeUpDirections extends React.Component {
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.body}>From: {fromText}</Text>
           </View>
+          {(fromLocation !== '' || fromText === 'My Location') &&
+            <>
+              <View style={{flexDirection: 'row', marginTop: 10}}>
+                <Text style={styles.body}>Estimated Time: {Math.round(this.props.duration)} minutes</Text>
+              </View>
+              <View style={{flexDirection: 'row', marginTop: 5}}>
+                <ResponsiveButton
+                  label='Open in Google Maps'
+                  labelStyle={{fontWeight: '600'}}
+                  style={{
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    borderRadius: 13
+                  }}
+                  gradientColors={['#C45146', '#C45146']}
+                  horizontalGradient={false}
+                  rounded={true}
+                  onPress={async () => {
+                    const url = `https://www.google.com/maps/dir/?api=1&destination=${this.props.destination.lat},${this.props.destination.lon}&origin=${encodeURIComponent(this.props.fromLocation)}&travelmode=${this.props.travelMode.toLowerCase()}`
+                    Linking.openURL(url);
+                  }}
+                />
+              </View>
+            </>
+          }
         </View>
         {closeButton}
       </View>
@@ -200,12 +226,14 @@ const searchBarStyles = StyleSheet.create({
 SwipeUpDirections.propTypes = {
   centerMapOnRoute: PropTypes.func.isRequired,
   destination: PropTypes.object,
+  duration: PropTypes.number,
+  fromLocation: PropTypes.string.isRequired,
   hideDirections: PropTypes.func.isRequired,
   instructions: PropTypes.array,
   isAnonymous: PropTypes.number.isRequired,
-  fromLocation: PropTypes.string.isRequired,
+  setfromLocation: PropTypes.func.isRequired,
   setOrigin: PropTypes.func.isRequired,
-  setfromLocation: PropTypes.func.isRequired
+  travelMode: PropTypes.string
 }
 
 export default SwipeUpDirections;
