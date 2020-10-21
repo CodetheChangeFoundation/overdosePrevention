@@ -8,6 +8,18 @@ target 'ops' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+
+  pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
+
   target 'opsTests' do
     inherit! :complete
     # Pods for testing
