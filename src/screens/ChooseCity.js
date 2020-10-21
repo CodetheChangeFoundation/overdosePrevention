@@ -13,7 +13,9 @@ const windowHeight = Dimensions.get('window').height;
 
 export default class ChooseCityScreen extends React.Component {
   static navigationOptions = {
-    title: 'Location'
+    title: 'Location',
+    headerLeft: () => null,
+    gestureEnabled: false
   };
 
   constructor(props) {
@@ -136,6 +138,9 @@ export default class ChooseCityScreen extends React.Component {
         </Text>
         <Text style={styles.ctc}>
           Developed by the <Text style={styles.clickableText} onPress={() => this.handleWebsiteLinkPress('http://codethechange.ca')}>Code the Change Foundation</Text>.
+        </Text>
+        <Text style={styles.zeroblock}>
+          More information at <Text style={styles.clickableText} onPress={() => this.handleWebsiteLinkPress('https://thezeroblock.org/bevel-app')}>Zero Block Society</Text>.
         </Text>
       </View>
     )
@@ -260,6 +265,12 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   ctc: {
+    marginBottom: 5,
+    fontWeight: '200',
+    textAlign: 'center',
+    fontSize: 12
+  },
+  zeroblock: {
     marginBottom: 15,
     fontWeight: '200',
     textAlign: 'center',

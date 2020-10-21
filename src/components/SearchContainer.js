@@ -66,7 +66,7 @@ class SearchContainer extends React.Component {
         onPress={() => this.props.onServicePress(serviceType)}
         style={styles.serviceContainer}
       >
-        <View style={[styles.serviceLogo, logosToUse[serviceType].viewStyle]}>
+        <View style={[styles.serviceLogo, this.props.servicesToDisplay !== serviceType ? logosToUse[serviceType].viewStyle : {backgroundColor: '#aaaaaa'} ]}>
           {logosToUse[serviceType].logo}
         </View>
         <Text style={styles.serviceText}>
