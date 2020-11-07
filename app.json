@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "0.1.0",
+    "version": "0.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -25,10 +25,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.thezeroblock.bevel-app",
-      "buildNumber": "0.1.0"
+      "buildNumber": "0.2.2"
     },
     "android": {
-      "package": "org.thezeroblock.bevel_app"
-    }
+      "package": "org.thezeroblock.bevel_app",
+      "versionCode": 1
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
