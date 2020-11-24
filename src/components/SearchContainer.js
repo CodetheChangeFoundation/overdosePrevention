@@ -15,33 +15,33 @@ const serviceTypes = [
   "Supervised Injection",
   "Replacement",
   "Mobile Unit",
-  "Pipe"
+  "Inhalation Services"
 ];
 
 // A map of each service type and the corresponding logo and style to use
 const logosToUse = {
   "Supervised Injection": {
-    viewStyle: {backgroundColor: 'black'},
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <NeedleLogo/>
   },
-  "Pipe": {
-    viewStyle: {backgroundColor: 'black'},
+  "Inhalation Services": {
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <PipeLogo/>
   },
   "Nurse": {
-    viewStyle: {backgroundColor: 'black'},
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <NurseLogo/>
   },
   "Replacement": {
-    viewStyle: {backgroundColor: 'black'},
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <ReplacementLogo/>
   },
   "Detox": {
-    viewStyle: {backgroundColor: 'black'},
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <DetoxLogo/>
   },
   "Mobile Unit": {
-    viewStyle: {backgroundColor: 'black'},
+    viewStyle: {backgroundColor: '#aaaaaa'},
     logo: <MobileUnitLogo/>
   },
   "Clear Filter": {
@@ -66,7 +66,7 @@ class SearchContainer extends React.Component {
         onPress={() => this.props.onServicePress(serviceType)}
         style={styles.serviceContainer}
       >
-        <View style={[styles.serviceLogo, this.props.servicesToDisplay !== serviceType ? logosToUse[serviceType].viewStyle : {backgroundColor: '#aaaaaa'} ]}>
+        <View style={[styles.serviceLogo, this.props.servicesToDisplay !== serviceType ? logosToUse[serviceType].viewStyle : {backgroundColor: 'black'} ]}>
           {logosToUse[serviceType].logo}
         </View>
         <Text style={styles.serviceText}>
