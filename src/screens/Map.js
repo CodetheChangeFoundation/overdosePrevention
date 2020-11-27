@@ -22,9 +22,9 @@ const MARKER_IMAGES = {
 }
 
 export default class MapScreen extends React.Component {
-	static navigationOptions = {
-    title: 'Map',
-	};
+	static navigationOptions = ({ navigation }) => ({
+    title: 'Map - ' + navigation.state.params.city
+  })
 
 	constructor(props) {
     super(props);

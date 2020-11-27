@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dimensions, Text, View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import PropTypes from "prop-types";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from '@expo/vector-icons';
 import ResponsiveButton from "../components/ResponsiveButton";
 
@@ -45,14 +44,9 @@ class MapPopup extends React.Component {
       <View style={styles.modalContainer}>
         <View style={styles.closeButtonContainer}>
           <TouchableOpacity onPress={this.props.hideModal}>
-            <LinearGradient
-              colors={['#C45146', '#C45146']}
-              style={styles.closeButton}
-              start={[0,0]}
-              end={[1,0]}
-            >
+            <View style={styles.closeButton}>
               <Ionicons name="md-close" size={28} color='#FFF'/>
-            </LinearGradient>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.modal}>
@@ -61,6 +55,8 @@ class MapPopup extends React.Component {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false} 
           >
+            <View style={{padding: 10}} />
+
             {service ? <Text style={styles.small}>{service.toUpperCase()}</Text> : null}
             {name ? <Text style={styles.title}>{name}</Text> : null}
             
@@ -84,6 +80,8 @@ class MapPopup extends React.Component {
                 <Text style={styles.body}>{this.formatHours(hours)}</Text>
               </View>
             }
+
+            <View style={{padding: 25}} />
             
           </ScrollView>
         </View>
@@ -137,7 +135,8 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 20,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: '#C45146'
   },
   directionsButtonContainer: {
     marginTop: -25
@@ -160,7 +159,6 @@ const styles = StyleSheet.create({
   small: {
     fontSize: 10,
     fontWeight: '600',
-    marginTop: 15,
     marginBottom: 5
   },
   body: {

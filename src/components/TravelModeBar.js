@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    height: 42+34,
+    height: 48+34,
     position: 'absolute',
     bottom: -34,
     left: 0,
     borderTopWidth: 1,
     paddingTop: 8,
-    paddingBottom: 2
+    paddingBottom: 8
   }
 })
 

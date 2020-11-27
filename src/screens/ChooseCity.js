@@ -76,6 +76,7 @@ export default class ChooseCityScreen extends React.Component {
     let location = await Location.getCurrentPositionAsync({});
     this.props.navigation.navigate('Map', {
       isAnonymous: 0,
+      city: 'Your Location',
       coordinates: {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude

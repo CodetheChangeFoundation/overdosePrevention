@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { SafeAreaView, View, StyleSheet, Image, Dimensions } from "react-native";
+import { StackActions, NavigationActions } from 'react-navigation';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -12,7 +13,11 @@ export default class SplashScreen extends React.Component {
   componentDidMount() {
     let self = this;
     setTimeout(function() {
-      self.props.navigation.navigate('Home', {  });
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Home' })],
+      });
+      self.props.navigation.dispatch(resetAction);
     },6000);
   }
 
