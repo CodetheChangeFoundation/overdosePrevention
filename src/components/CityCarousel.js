@@ -23,31 +23,28 @@ class CityCarousel extends React.Component {
   constructor(props) {
     super(props);
 
-    let sites = {};
+    this.sites = {};
     this.props.sites.forEach(site => {
-      if (site.cid in sites) {
-        sites[site.cid].push(site);
-      } else {
-        sites[site.cid] = [site];
+      if (!(site.cid in this.sites)) {
+        this.sites[site.cid] = true;
       }
     });
-
-    this.state = {
-      cities: props.cities,
-      sites: sites
-    };
   }
 
   renderCities() {
-    const { cities, sites } = this.state;
+    const { cities } = this.props;
     let allCitiesRendered = [];
     let cityButtons = [];
 
     for (let i = 0; i < cities.length; i++) {
-      let cityButton = this.renderCityButton(cities[i].city, colours[i%4], { "latitude": parseFloat(cities[i].lat), "longitude": parseFloat(cities[i].lon) }, sites[cities[i].cid])
-      if (cityButton) {
-        cityButtons.push(cityButton);
+      
+      if (this.sites[cities[i].cid]) { 
+        let cityButton = this.renderCityButton(cities[i].city, colours[i%4], { "latitude": parseFloat(cities[i].lat), "longitude": parseFloat(cities[i].lon) })
+        if (cityButton) {
+          cityButtons.push(cityButton);
+        }
       }
+
       if (cityButtons.length === 4 || (i+1) === cities.length) {
         allCitiesRendered.push(<View key={i} style={styles.cityButtonsContainer}>{cityButtons}</View>);
         cityButtons = [];
@@ -57,12 +54,7 @@ class CityCarousel extends React.Component {
     return allCitiesRendered;
   }
 
-  renderCityButton(name, color, coordinates, services) {
-    if (services === undefined) {
-      return (
-        undefined
-      )
-    }
+  renderCityButton(name, color, coordinates) {
     return (
       <ResponsiveButton
         key={name}
@@ -73,7 +65,7 @@ class CityCarousel extends React.Component {
         gradientColors={color}
         horizontalGradient={false}
         rounded={true}
-        onPress={() => this.props.navigation.navigate('Map', {isAnonymous: 1, city: name, coordinates: coordinates, services: services})}
+        onPress={() => this.props.navigation.navigate('Map', {isAnonymous: 1, city: name, coordinates: coordinates, services: this.props.sites})}
       />
     );
   }

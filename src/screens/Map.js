@@ -1,7 +1,8 @@
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, View, Text } from "react-native";
 import PropTypes from "prop-types";
-import MapView from "react-native-maps";
+import MapView from "react-native-map-clustering";
+import { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import SwipeUpSearch from "../components/SwipeUpSearch";
 import SwipeUpDirections from "../components/SwipeUpDirections";
@@ -14,7 +15,7 @@ const DELTAS = {latitudeDelta: 0.0922, longitudeDelta: 0.0421};
 const MARKER_IMAGES = {
   "Supervised Injection": require('../../assets/markers/needle_marker.png'),
   "Replacement": require('../../assets/markers/replacement_marker.png'),
-  "Pipe": require('../../assets/markers/pipe_marker.png'),
+  "Inhalation Services": require('../../assets/markers/pipe_marker.png'),
   "Nurse": require('../../assets/markers/nurse_marker.png'),
   "Mobile Unit": require('../../assets/markers/mobile_unit_marker.png'),
   "Detox": require('../../assets/markers/detox_marker.png'),
@@ -44,7 +45,6 @@ export default class MapScreen extends React.Component {
     this.destination = undefined;
     this.origin = undefined;
     this.isAnonymous = this.props.navigation.getParam('isAnonymous');
-    this.currentRegion = {...initialOrigin, ...DELTAS};
     this.filterSites = this.filterSites.bind(this);
     this.centerMapOnRoute = this.centerMapOnRoute.bind(this);
     this.changeTravelMode = this.changeTravelMode.bind(this);
@@ -78,7 +78,6 @@ export default class MapScreen extends React.Component {
 
   filterSites(type) {
     this.setState({
-      region: this.currentRegion,
       servicesToDisplay: type
     });
   }
@@ -86,7 +85,6 @@ export default class MapScreen extends React.Component {
   renderSites() {
     const { servicesToDisplay, drawRoute } = this.state;
     let sites = this.props.navigation.getParam('services');
-
     if (drawRoute && this.destination !== undefined) {
       sites = sites.filter(site => this.destination.lat === site.lat && this.destination.lon === site.lon);
     } else if (servicesToDisplay !== undefined) {
@@ -96,13 +94,13 @@ export default class MapScreen extends React.Component {
     if (sites) {
       return sites.map(site => {
         return (
-          <MapView.Marker
+          <Marker
             key={site.sid}
             coordinate={{
               "latitude": parseFloat(site.lat),
               "longitude": parseFloat(site.lon)
             }}
-            onPress={() => { this.destination = site; this.setState({region: this.currentRegion, modalVisible: true}) }}
+            onPress={() => { this.destination = site; this.setState({modalVisible: true}) }}
             image={MARKER_IMAGES[site.service] ? MARKER_IMAGES[site.service] : MARKER_IMAGES["Default"]}
           />
         );
@@ -142,9 +140,14 @@ export default class MapScreen extends React.Component {
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <MapView
           style={{ flex: 1 }}
-          provider="google"
+          provider='google'
           region={region}
-          onRegionChangeComplete={(region) => this.currentRegion = region}
+          animationEnabled={false}
+          clusterColor='#C45146'
+          clusterTextColor='white'
+          minZoom={1}
+          maxZoom={9}
+          onRegionChangeComplete={(region) => this.setState({region})}
           showsUserLocation={!this.isAnonymous ? true : false}
           followsUserLocation={!this.isAnonymous ? true : false}
           onUserLocationChange={!this.isAnonymous ? 
@@ -156,8 +159,9 @@ export default class MapScreen extends React.Component {
             } : undefined}
         >
           {this.renderSites()}
-          { drawRoute && this.origin !== undefined && this.destination !== undefined &&
-            <MapViewDirections 
+          { drawRoute && this.origin !== undefined && this.destination !== undefined ?
+            <MapViewDirections
+              isOutsideCluster={true}
               origin={this.origin} 
               destination = {{ latitude: parseFloat(this.destination.lat), longitude: parseFloat(this.destination.lon) }}
               mode={travelMode}
@@ -170,7 +174,7 @@ export default class MapScreen extends React.Component {
                   instructions: result.instructions
                 });
               }}
-            />
+            /> : <View isOutsideCluster={true} />
           }
         </MapView>
 
@@ -178,7 +182,7 @@ export default class MapScreen extends React.Component {
           <SiteSearch
             sites={this.props.navigation.getParam('services')}
             setDestination={this.setDestination}
-            setRegionAndModal={() => this.setState({region: this.currentRegion, modalVisible: true})}
+            setRegionAndModal={() => this.setState({modalVisible: true})}
           />
         }
 
