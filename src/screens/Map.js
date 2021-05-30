@@ -100,8 +100,8 @@ export default class MapScreen extends React.Component {
               "latitude": parseFloat(site.lat),
               "longitude": parseFloat(site.lon)
             }}
-            onPress={() => { this.destination = site; this.setState({modalVisible: true}) }}
-            image={MARKER_IMAGES[site.service] ? MARKER_IMAGES[site.service] : MARKER_IMAGES["Default"]}
+            onPress={() => { this.destination = site; this.setState({modalVisible: true}); }}
+            image={MARKER_IMAGES[site.service.trim()] ? MARKER_IMAGES[site.service.trim()] : MARKER_IMAGES["Default"]}
           />
         );
       });

@@ -22,7 +22,7 @@ class MapPopup extends React.Component {
       output += country + '\n';
     }
     if (postal_code) output += postal_code + '\n';
-    return output.substring(0, output.length-2);
+    return output.substring(0, output.length-1);
   }
 
   formatPhoneNumber(phoneNumber) {
@@ -31,7 +31,7 @@ class MapPopup extends React.Component {
     if (match) {
       return '(' + match[1] + ') ' + match[2] + '-' + match[3]
     }
-    return null
+    return phoneNumber
   }
 
   formatHours(hours) {
